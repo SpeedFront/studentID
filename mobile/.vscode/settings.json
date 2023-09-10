@@ -1,0 +1,31 @@
+{
+    "editor.tabSize": 4,
+    "editor.fontLigatures": true,
+    "editor.lineHeight": 25,
+    "eslint.format.enable": true,
+    "eslint.lintTask.enable": true,
+    "markdown.preview.breaks": true,
+    "prettier.configPath": ".prettierrc",
+    "prettier.jsxSingleQuote": true,
+    "prettier.singleQuote": true,
+    "prettier.useTabs": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "eslint.probe": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": false,
+    // Runs Prettier, then ESLint
+    "editor.codeActionsOnSave": ["source.formatDocument", "source.fixAll.eslint"],
+    "[xml]": {
+        "editor.defaultFormatter": "redhat.vscode-xml"
+    },
+    "[ignore]": {
+        "editor.defaultFormatter": "foxundermoon.shell-format"
+    },
+    "files.exclude": {
+        "**/.expo": true,
+        "**/node_modules": true,
+        "**/*{-,.}lock*": true,
+        "**/.prettierignore": true,
+        "**/.eslintignore": true
+    }
+}

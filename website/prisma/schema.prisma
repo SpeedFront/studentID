@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("POSTGRES_PRISMA_URL") // Uses connection pooling
+  directUrl         = env("POSTGRES_URL_NON_POOLING") // Uses a direct connection
+  shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // Used for migrations
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token") // Session token (used for authentication)
+  expiresAt    DateTime @default(dbgenerated("now() + interval '8 hours'")) @map("expires_at") // Timestamp of expiration
+  userId       String   @map("user_id") // User who owns the session
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at") // Timestamp of session creation
+  updatedAt DateTime @updatedAt @map("updated_at") // Timestamp of last update
+}
+
+enum Role {
+  SUPER_ADMIN // Super admin
+  ADMIN // Admin
+  USER // User
+}
+
+model User {
+  id          String        @id @default(cuid())
+  suapId      String        @unique @map("suap_id") // User's SUAP ID (unique)
+  rfid        String        @unique // User's RFID (unique)
+  name        String // User's name
+  email       String        @unique // User's email (unique)
+  avatar      String? // URL of user's profile picture
+  sessions    Session[] // Sessions opened by the user
+  role        Role          @default(USER) // User's role
+  phoneNumber String?       @map("phone_number") // User's phone number
+  medicalInfo MedicalInfo[] // User's medical info
+  accesses    AccessLog[] // Access logs of the user
+
+  createdAt DateTime @default(now()) @map("created_at") // Timestamp of user creation
+  updatedAt DateTime @updatedAt @map("updated_at") // Timestamp of last update
+}
+
+model MedicalInfo {
+  id          String   @id @default(cuid())
+  bloodType   String?  @map("blood_type") // User's blood type
+  allergies   String[] // User's allergies
+  diseases    String[] // User's diseases
+  medications String[] // User's medications
+  userId      String   @map("user_id") // User who owns the medical info
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at") // Timestamp of medical info creation
+  updatedAt DateTime @updatedAt @map("updated_at") // Timestamp of last update
+}
+
+model AccessLog {
+  id     String @id @default(cuid())
+  userId String @map("user_id") // User who opened the door
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  doorId String @map("door_id") // Door that was opened
+  door   Door   @relation(fields: [doorId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at") // Timestamp of access log creation
+  updatedAt DateTime @updatedAt @map("updated_at") // Timestamp of last update
+}
+
+model Door {
+  id          String      @id @default(cuid())
+  name        String? // Door's name
+  description String? // Door's description]
+  accessLogs  AccessLog[] // Access logs of the door
+
+  createdAt DateTime @default(now()) @map("created_at") // Timestamp of door creation
+  updatedAt DateTime @updatedAt @map("updated_at") // Timestamp of last update
+}
+
+model CreationRequest {
+  id        Int      @id @default(autoincrement())
+  rfid      String   @unique // User's RFID (unique)
+  expiresAt DateTime @default(dbgenerated("now() + interval '1 week'")) @map("expires_at") // Timestamp of expiration
+
+  createdAt DateTime @default(now()) @map("created_at") // Timestamp of creation request creation
+  updatedAt DateTime @updatedAt @map("updated_at") // Timestamp of last update
+}
