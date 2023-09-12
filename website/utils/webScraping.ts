@@ -10,7 +10,7 @@ export async function newPage(
     args?: PuppeteerLaunchOptions,
 ) {
     const browser = await puppeteer.launch({
-        headless: false,
+        headless: process.env.NODE_ENV !== 'development' ? false : 'new',
         args: [
             '--allow-external-pages',
             '--allow-third-party-modules',

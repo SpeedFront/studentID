@@ -6,7 +6,12 @@ const publicPathnameRegex = RegExp(`^/(${publicPages.join('|')})/?$`, 'i');
 export default withAuth({
     callbacks: {
         authorized: ({ req, token }) => {
-            const isPublicPage = publicPathnameRegex.test(req.nextUrl.pathname);
+            const path = req.nextUrl.pathname;
+            const isPublicPage = publicPathnameRegex.test(path);
+
+            if (path.includes('.')) {
+                return true;
+            }
 
             return isPublicPage || token !== null;
         },
@@ -17,5 +22,5 @@ export default withAuth({
 });
 
 export const config = {
-    matcher: ['/((?!api|_next|.*\\..*).*)'],
+    matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 };

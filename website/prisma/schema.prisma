@@ -44,13 +44,16 @@ model User {
 }
 
 model MedicalInfo {
-  id          String   @id @default(cuid())
-  bloodType   String?  @map("blood_type") // User's blood type
-  allergies   String[] // User's allergies
-  diseases    String[] // User's diseases
-  medications String[] // User's medications
-  userId      String   @map("user_id") // User who owns the medical info
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id            String   @id @default(cuid())
+  bloodType     String?  @map("blood_type") // User's blood type
+  allergies     String[] // User's allergies
+  diseases      String[] // User's diseases
+  medications   String[] // User's medications
+  deficiencies  String[] // User's deficiencies
+  useHearingAid Boolean  @default(false) @map("use_hearing_aid") // User uses hearing aid
+  useWheelchair Boolean  @default(false) @map("use_wheelchair") // User uses wheelchair
+  userId        String   @unique @map("user_id") // User who owns the medical info
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now()) @map("created_at") // Timestamp of medical info creation
   updatedAt DateTime @updatedAt @map("updated_at") // Timestamp of last update
@@ -81,6 +84,7 @@ model CreationRequest {
   id        Int      @id @default(autoincrement())
   rfid      String   @unique // User's RFID (unique)
   expiresAt DateTime @default(dbgenerated("now() + interval '1 week'")) @map("expires_at") // Timestamp of expiration
+  used      Boolean  @default(false) // Whether the request was used
 
   createdAt DateTime @default(now()) @map("created_at") // Timestamp of creation request creation
   updatedAt DateTime @updatedAt @map("updated_at") // Timestamp of last update

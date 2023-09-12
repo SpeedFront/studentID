@@ -8,10 +8,10 @@ import clsx from 'clsx';
 const Navbar = async () => {
     const session = await getServerSession(callbacks);
 
-    const categories: { id: number; name: string }[] = [
-        { id: 1, name: 'Histórico' },
-        { id: 2, name: 'Comprovantes' },
-        { id: 3, name: 'Configurações' },
+    const categories: { id: number; name: string; url: string }[] = [
+        { id: 1, name: 'Histórico', url: '/history' },
+        { id: 2, name: 'Comprovantes', url: '/receipts' },
+        { id: 3, name: 'Configurações', url: '/settings' },
     ];
 
     return (
@@ -32,7 +32,7 @@ const Navbar = async () => {
                     <Link href={!session?.user ? '/login' : '/account'}>
                         {session?.user.avatar ? (
                             <Image
-                                src={session.user.avatar}
+                                src={`data:image/jpeg;base64,${session.user.avatar}`}
                                 alt={session.user.name + ' avatar'}
                                 width={48}
                                 height={48}
@@ -49,11 +49,11 @@ const Navbar = async () => {
                     <ListItem className="text-dark hover:text-primary border-gray-300 border-r px-8" NavLink="/">
                         Início
                     </ListItem>
-                    {categories.map(({ id, name }) => (
+                    {categories.map(({ id, name, url }) => (
                         <ListItem
                             key={'NavBar-' + id}
                             className="text-dark hover:text-primary border-gray-300 border-r px-8"
-                            NavLink={`/${name}`}
+                            NavLink={`/${url}`}
                         >
                             {name}
                         </ListItem>

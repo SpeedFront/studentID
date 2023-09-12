@@ -35,7 +35,7 @@ export async function generateMetadata() {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
     try {
         return (
-            <html data-theme="light" lang="pt-BR">
+            <html lang="pt-BR">
                 <body className={inter.variable}>
                     <Toaster />
                     {children}
