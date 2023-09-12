@@ -11,7 +11,7 @@ sudo apt update -y && sudo apt upgrade -y && sudo apt autoremove -y
 
 # Instala pacotes essenciais
 print_msg "Instalando Nginx, PM2, Node.js LTS, Micro, cURL e PostgreSQL..."
-sudo apt install -y nginx pm2 curl postgresql
+sudo apt install -y nginx pm2 curl postgresql micro
 curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 sudo apt install -y nodejs
 sudo npm install -g yarn pnpm
@@ -47,26 +47,51 @@ alias cls="clear"
 alias mka="micro ~/.bashrc"
 alias sva="source ~/.bashrc"
 alias sudo="sudo "
+
 build() {
     cd ~/"\$1"
-    yarn build
+    pnpm i
+    pnpm build
+    cd ~/
 }
-start() {
+
+start() {server {
+    listen 80;
+    listen [::]:80;
+    server_name $domain;
+
+    location / {
+        proxy_pass http://127.0.0.1:8080;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_cache_bypass \$http_upgrade;
+    }
+}
     cd ~/"\$1"
-    pm2 start yarn --name "\$1" -- start
+    pm2 start pnpm --name "\$1" -- start
+    cd ~/
 }
+
 stop() {
     pm2 stop "\$1"
 }
+
 update() {
     cd ~/"\$1"
     git pull
     build "\$1"
     pm2 restart "\$1"
+    cd ~/
 }
+
 env() {
     micro ~/"\$1/.env"
 }
+
 edng() {
     micro /etc/nginx/sites-available/"\$1"
 }
@@ -88,6 +113,7 @@ server {
     listen 80;
     listen [::]:80;
     server_name $domain;
+
     location / {
         proxy_pass http://127.0.0.1:8080;
         proxy_http_version 1.1;
@@ -104,6 +130,17 @@ EOL
 # Ativa configuração Nginx e reinicia
 sudo ln -s /etc/nginx/sites-available/"$domain" /etc/nginx/sites-enabled/
 sudo systemctl restart nginx
+
+# Criando o update
+sudo tee "/home/$sudo_user/update.sh" >/dev/null <<EOL
+#!/bin/bash
+
+cd ~/"$repo_name"
+git pull
+build "$repo_namev"
+pm2 restart "$repo_name"
+cd ~/
+EOL
 
 # Agendamento diário para "update"
 print_msg "Agendando 'update' diariamente..."
