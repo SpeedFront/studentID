@@ -57,7 +57,7 @@ export const authOptions: NextAuthOptions = {
                 const exists = await suapLogin(registration, password);
 
                 if (exists.status === 'error' || exists.sessionid === undefined) {
-                    throw new Error(exists.message);
+                    throw new Error(exists.message ?? 'Erro ao fazer login');
                 }
 
                 const user = await prisma.user.findUnique({

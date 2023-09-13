@@ -84,7 +84,7 @@ const UserAccount = ({ user }: UserAccountProps) => {
                 >
                     {avatar && (
                         <Image
-                            src={avatar}
+                            src={'data:image/jpeg;base64,' + avatar}
                             alt={name + ' avatar'}
                             width={280}
                             height={280}
@@ -97,7 +97,7 @@ const UserAccount = ({ user }: UserAccountProps) => {
                         className="input w-full input-bordered"
                         placeholder="Nome completo"
                         {...register('name')}
-                        disabled={blockForm}
+                        disabled
                     />
                     {email && (
                         <input
@@ -117,7 +117,7 @@ const UserAccount = ({ user }: UserAccountProps) => {
                         {...register('phoneNumber', {
                             pattern: /^(?:\+\d{2,3}\s?)?(?:\(?\d{2,3}\)?\s?)?\d{4,5}-?\d{4}$/,
                         })}
-                        disabled={blockForm}
+                        disabled
                     />
                     <div className="flex justify-evenly">
                         <SignOut type="button" className="btn btn-error">

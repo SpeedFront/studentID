@@ -18,8 +18,8 @@ export default async function Login() {
 function Content() {
     return (
         <div className="flex h-[80vh] items-center justify-center">
-            <div className="z-10 w-full max-w-md overflow-hidden rounded-2xl border border-gray-100 shadow-xl">
-                <div className="flex flex-col items-center justify-center space-y-3 border-b border-gray-200 bg-white px-4 py-6 pt-8 text-center sm:px-16">
+            <div className="z-10 w-full max-w-md overflow-hidden rounded-2xl border border-[#555b5e] shadow-xl">
+                <div className="flex flex-col items-center justify-center space-y-3 border-b border-[#555b5e] px-4 py-6 pt-8 text-center sm:px-16">
                     <Link href="/">
                         <Image
                             src="/logo.png"
@@ -30,8 +30,8 @@ function Content() {
                             height={20}
                         />
                     </Link>
-                    <h3 className="text-xl font-semibold">Entre na sua conta</h3>
-                    <p className="text-sm text-gray-500">Preencha os campos abaixo para entrar na sua conta.</p>
+                    <h3 className="text-xl font-semibold text-white">Entre na sua conta</h3>
+                    <p className="text-sm text-gray-400">Preencha os campos abaixo para entrar na sua conta.</p>
                 </div>
                 <Form type="login" />
             </div>

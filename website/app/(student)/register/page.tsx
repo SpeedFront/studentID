@@ -4,9 +4,9 @@ import Link from 'next/link';
 
 export default function SignUp() {
     return (
-        <div className="flex h-[80vh] items-center justify-center bg-gray-50">
-            <div className="z-10 w-full max-w-md overflow-hidden rounded-2xl border border-gray-100 shadow-xl">
-                <div className="flex flex-col items-center justify-center space-y-3 border-b border-gray-200 bg-white px-4 py-6 pt-8 text-center sm:px-16">
+        <div className="flex h-[80vh] items-center justify-center">
+            <div className="z-10 w-full max-w-md overflow-hidden rounded-2xl border border-[#555b5e] shadow-xl">
+                <div className="flex flex-col items-center justify-center space-y-3 border-b border-[#555b5e] px-4 py-6 pt-8 text-center sm:px-16">
                     <Link href="/">
                         <Image
                             src="/logo.png"
@@ -17,8 +17,10 @@ export default function SignUp() {
                             height={20}
                         />
                     </Link>
-                    <h3 className="text-xl font-semibold">Crie sua conta</h3>
-                    <p className="text-sm text-gray-500">Preencha os campos abaixo para criar sua conta.</p>
+                    <h3 className="text-xl font-semibold text-white">Vincule seu crachá</h3>
+                    <p className="text-sm text-gray-400">
+                        Preencha os campos abaixo para vincular seu crachá a sua conta do SUAP.
+                    </p>
                 </div>
                 <Form type="register" />
             </div>
