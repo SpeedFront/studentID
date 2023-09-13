@@ -13,13 +13,11 @@ export async function POST(req: Request) {
         typeof username !== 'string' ||
         typeof password !== 'string' ||
         typeof doorId !== 'string' ||
-        typeof name !== 'string' ||
-        typeof description !== 'string' ||
+        (typeof name !== 'string' && name.length <= 0) ||
+        (typeof description !== 'string' && description.length <= 0) ||
         username.length <= 0 ||
         password.length <= 0 ||
-        doorId.length <= 0 ||
-        name.length <= 0 ||
-        description.length <= 0
+        doorId.length <= 0
     ) {
         return NextResponse.json({ status: 'error', message: 'Campos em falta' }, { status: 400 });
     }
