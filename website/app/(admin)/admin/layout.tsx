@@ -1,6 +1,7 @@
 import { type Session, getServerSession } from 'next-auth';
 import { callbacks } from '@/app/api/auth/[...nextauth]/route';
 import { notFound } from 'next/navigation';
+import { Toaster } from 'react-hot-toast';
 import { Drawer } from '@/components/admin/header';
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
