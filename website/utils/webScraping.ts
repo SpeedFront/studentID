@@ -40,7 +40,13 @@ export async function newPage(
         };
     }
 
-    const browser = await puppeteer.launch(options);
+    const browser =
+        process.env.BLESS_TOKEN && process.env.USE_BLESS === 'true'
+            ? await puppeteer.connect({
+                  browserWSEndpoint: `wss://chrome.browserless.io?token=${process.env.BLESS_TOKEN}`,
+                  ignoreHTTPSErrors: true,
+              })
+            : await puppeteer.launch(options);
 
     const page = await browser.newPage();
 

@@ -3,7 +3,6 @@ import '@/styles/globals.css';
 
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { Toaster } from 'react-hot-toast';
 import { Inter } from 'next/font/google';
 
 const inter = Inter({
@@ -36,10 +35,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     try {
         return (
             <html lang="pt-BR">
-                <body className={inter.variable}>
-                    <Toaster />
-                    {children}
-                </body>
+                <body className={inter.variable}>{children}</body>
             </html>
         );
     } catch {

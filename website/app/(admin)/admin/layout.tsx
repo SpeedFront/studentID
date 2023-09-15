@@ -15,8 +15,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
 const Content = ({ children, session }: { children: React.ReactNode; session: Session }) => {
     return (
-        <Drawer drawerId="admin-drawer" user={session.user}>
-            {children}
-        </Drawer>
+        <>
+            <Toaster position="top-center" />
+            <Drawer drawerId="admin-drawer" user={session.user}>
+                {children}
+            </Drawer>
+        </>
     );
 };

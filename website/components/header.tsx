@@ -36,7 +36,7 @@ const Navbar = async () => {
                                 alt={session.user.name + ' avatar'}
                                 width={48}
                                 height={48}
-                                className="border-black border-2 rounded-full"
+                                className="border-black border-2 rounded-full cursor-pointer hover:opacity-80"
                             />
                         ) : (
                             <FiUser className="text-gray-800 border-black border-2 p-2 rounded-full text-5xl cursor-pointer hover:text-gray-600" />
