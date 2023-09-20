@@ -20,7 +20,13 @@ export async function POST(req: Request) {
     }
 
     const creationRequest = await prisma.creationRequest.findUnique({
-        where: { id, used: false },
+        where: {
+            id,
+            used: false,
+            expiresAt: {
+                gt: new Date(),
+            },
+        },
     });
 
     if (typeof creationRequest?.rfid !== 'string') {

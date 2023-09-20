@@ -7,8 +7,10 @@ export default withAuth({
         authorized: ({ req, token }) => {
             const path = req.nextUrl.pathname;
             const isPublicPage = publicPages.includes(path);
+            const now = new Date();
+            const exp = token?.exp as number | undefined;
 
-            return path.includes('.') || isPublicPage || token !== null;
+            return path.includes('.') || isPublicPage || !!(token !== null && exp && exp * 1000 > now.getTime());
         },
     },
     pages: {

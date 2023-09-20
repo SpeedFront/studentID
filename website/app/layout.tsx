@@ -4,6 +4,7 @@ import '@/styles/globals.css';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Inter } from 'next/font/google';
+import clsx from 'clsx';
 
 const inter = Inter({
     variable: '--font-inter',
@@ -35,7 +36,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     try {
         return (
             <html lang="pt-BR">
-                <body className={inter.variable}>{children}</body>
+                <body className={clsx(inter.variable, 'min-h-screen')}>{children}</body>
             </html>
         );
     } catch {

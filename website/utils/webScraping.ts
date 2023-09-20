@@ -1,7 +1,6 @@
 import { PuppeteerLaunchOptions } from 'puppeteer';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import puppeteer from 'puppeteer-extra';
-import chromium from '@sparticuz/chromium-min';
 
 puppeteer.use(StealthPlugin());
 
@@ -28,6 +27,7 @@ export async function newPage(
     let options: PuppeteerLaunchOptions = localOptions;
 
     if (process.env.USE_SERVER_CHROMIUM === 'true' || process.env.NODE_ENV !== 'development') {
+        const chromium = (await import('@sparticuz/chromium-min')).default;
         options = {
             args: [...chromium.args, '--hide-scrollbars', '--disable-web-security'],
             defaultViewport: chromium.defaultViewport,

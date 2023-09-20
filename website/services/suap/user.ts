@@ -1,7 +1,8 @@
 import { type Page } from 'puppeteer';
-import { readFile, unlink } from 'fs/promises';
+import { read, MIME_JPEG } from 'jimp';
 import { downloadFile } from '@/utils/files';
 import { newPage } from '@/utils/webScraping';
+import { unlink } from 'fs/promises';
 
 export interface UserData {
     registration: string;
@@ -48,16 +49,16 @@ export async function getUserData(sessionid: { value: string; expires: Date | nu
         });
 
         if (avatar) {
-            const path = `./public/temp/avatars/${registration}.jpg`;
-            await downloadFile(avatar, path);
+            const inPath = `./public/temp/avatars/${registration}-in.jpg`;
+            const outPath = `./public/temp/avatars/${registration}-out.jpg`;
+            await downloadFile(avatar, inPath);
 
-            const img = await readFile(path).catch(() => undefined);
-            await unlink(path);
+            const img = await resizeAndConvertToBase64(inPath, outPath, MIME_JPEG).catch(() => undefined);
 
             if (!img) {
                 avatar = undefined;
             } else {
-                avatar = Buffer.from(img).toString('base64');
+                avatar = img.replace(/^data:image\/[^;]+;base64,/, '');
             }
         }
 
@@ -139,4 +140,37 @@ async function getMedicalInfo(page: Page, id: string) {
         useHearingAid,
         useWheelchair,
     };
+}
+
+async function resizeAndConvertToBase64(inputPath: string, outputPath: string, outputFormat: string): Promise<string> {
+    // Carregue a imagem de entrada
+    const image = await read(inputPath);
+
+    // Verifique se a imagem possui a proporção 3:4 (ou seja, largura:altura = 3:4)
+    if (image.getWidth() / image.getHeight() !== 3 / 4) {
+        throw new Error('A imagem de entrada não possui proporção 3:4');
+    }
+
+    // Defina as novas dimensões para proporção 1:1 sem distorção
+    const newWidth = Math.min(image.getWidth(), image.getHeight());
+    const newHeight = newWidth;
+
+    // Redimensione a imagem
+    image.crop(0, 0, newWidth, newHeight);
+
+    // Salve a imagem redimensionada
+    await image.writeAsync(outputPath);
+
+    // Converta a imagem redimensionada para base64
+    const base64Data = await read(outputPath).then(img => {
+        return img.getBase64Async(outputFormat);
+    });
+
+    console.log(base64Data);
+
+    // Exclua as imagens de entrada e saída
+    await unlink(inputPath);
+    await unlink(outputPath);
+
+    return base64Data;
 }

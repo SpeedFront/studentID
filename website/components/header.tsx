@@ -1,6 +1,8 @@
 import { FiUser, FiSettings } from 'react-icons/fi';
+import { IoReorderThreeSharp } from 'react-icons/io5';
 import { getServerSession } from 'next-auth';
 import { callbacks } from '@/app/api/auth/[...nextauth]/route';
+import ReactThemeToggleButton from './theme-button';
 import Image from 'next/image';
 import Link from 'next/link';
 import clsx from 'clsx';
@@ -17,12 +19,13 @@ const Navbar = async () => {
     return (
         <header className="w-full sticky top-0 bg-white border-gray-300 border-b">
             <div className="w-full h-20 flex items-center justify-between">
-                <Link href="/" className="px-6 hidden lg:block">
+                <IoReorderThreeSharp className="text-gray-800 border-black border-2 p-2 rounded-full text-5xl cursor-pointer hover:text-gray-600 ml-[1%] block lg:hidden" />
+                <Link href="/" className="px-6 hidden sm:block">
                     <Image src={process.env.NEXT_PUBLIC_SITE_URL + '/logo.svg'} alt="Logo" width={160} height={40} />
                 </Link>
-                <div className="flex items-center space-x-4 max-w-[18%] mr-[1%] sm:mr-4 lg:mr-6">
+                <div className="flex items-center space-x-4 max-w-[18%] ml-auto mr-[1%] sm:mr-4 lg:mr-6">
                     <Link
-                        href={session?.user.role && session?.user.role !== 'USER' ? '/admin' : '/cart'}
+                        href={session?.user.role && session?.user.role !== 'USER' ? '/admin' : '/'}
                         className="cursor-pointer relative inline-flex items-center"
                     >
                         {session?.user.role && session?.user.role !== 'USER' ? (
@@ -42,6 +45,9 @@ const Navbar = async () => {
                             <FiUser className="text-gray-800 border-black border-2 p-2 rounded-full text-5xl cursor-pointer hover:text-gray-600" />
                         )}
                     </Link>
+                    <div className="text-gray-800 text-3xl cursor-pointer hover:text-gray-600">
+                        <ReactThemeToggleButton />
+                    </div>
                 </div>
             </div>
             <nav className="hidden lg:block w-full">
