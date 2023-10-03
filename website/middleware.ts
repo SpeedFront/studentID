@@ -10,7 +10,11 @@ export default withAuth({
             const now = new Date();
             const exp = token?.exp as number | undefined;
 
-            return path.includes('.') || isPublicPage || !!(token !== null && exp && exp * 1000 > now.getTime());
+            return (
+                path.includes('.') ||
+                isPublicPage ||
+                !!(token !== null && exp !== undefined && exp > Math.round(now.getTime() / 1000))
+            );
         },
     },
     pages: {

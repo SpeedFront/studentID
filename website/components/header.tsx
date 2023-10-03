@@ -45,7 +45,7 @@ const Navbar = async () => {
                             <FiUser className="text-gray-800 border-black border-2 p-2 rounded-full text-5xl cursor-pointer hover:text-gray-600" />
                         )}
                     </Link>
-                    <div className="text-gray-800 text-3xl cursor-pointer hover:text-gray-600">
+                    <div className="hidden lg:visible text-gray-800 text-3xl cursor-pointer hover:text-gray-600">
                         <ReactThemeToggleButton />
                     </div>
                 </div>

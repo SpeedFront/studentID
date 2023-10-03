@@ -1,21 +1,15 @@
-import { getServerSession } from 'next-auth';
-import { callbacks } from '@/app/api/auth/[...nextauth]/route';
-import { redirect } from 'next/navigation';
+'use client';
+
+import { useEffect } from 'react';
+import { signOut } from 'next-auth/react';
 import { Logo } from '@/components/logo';
-import Form from '@/components/form';
 import Link from 'next/link';
 
-export default async function Login() {
-    const session = await getServerSession(callbacks);
+export default function Login() {
+    useEffect(() => {
+        signOut();
+    }, []);
 
-    if (session?.user) {
-        redirect('/conta');
-    }
-
-    return <Content />;
-}
-
-function Content() {
     return (
         <div className="flex h-[80vh] items-center justify-center">
             <div className="z-10 w-full lg:max-w-md overflow-hidden rounded-2xl lg:border border-[#555b5e] shadow-xl">
@@ -23,10 +17,8 @@ function Content() {
                     <Link href="/">
                         <Logo priority className="h-40 w-40" width={160} height={160} />
                     </Link>
-                    <h3 className="text-xl font-semibold text-white">Entre na sua conta</h3>
-                    <p className="text-sm text-gray-400">Preencha os campos abaixo para entrar na sua conta.</p>
+                    <h3 className="text-xl font-semibold">Saindo...</h3>
                 </div>
-                <Form type="login" />
             </div>
         </div>
     );

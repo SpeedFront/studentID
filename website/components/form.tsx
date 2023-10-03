@@ -47,7 +47,7 @@ export default function Form({ type }: FormProps) {
                 toast.success('Logado com sucesso! Redirecionando...');
 
                 setTimeout(() => {
-                    router.push(searchParams.get('callbackUrl') ?? '/account');
+                    router.push(searchParams.get('callbackUrl') ?? '/conta');
                 }, 2000);
             }
         } else {
@@ -103,7 +103,7 @@ export default function Form({ type }: FormProps) {
                         placeholder="ID do pedido de vinculação do cartão"
                         className="mt-1 block w-full appearance-none rounded-md px-3 py-2 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
                     />
-                    {errors.requestId && <p className="text-xs text-red-500">ID inválido</p>}
+                    {errors.requestId && <p className="text-sm text-red-500">ID inválido</p>}
                 </div>
             )}
             <div>
@@ -116,7 +116,7 @@ export default function Form({ type }: FormProps) {
                     placeholder="Matrícula do SUAP"
                     className="mt-1 block w-full appearance-none rounded-md px-3 py-2 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
                 />
-                {errors.registration && <p className="text-xs text-red-500">Matrícula inválida</p>}
+                {errors.registration && <p className="text-sm text-red-500">Matrícula inválida</p>}
             </div>
             <div>
                 <label htmlFor="password" className="block text-xs uppercase">
@@ -129,16 +129,9 @@ export default function Form({ type }: FormProps) {
                     placeholder="Senha do SUAP"
                     className="mt-1 block w-full appearance-none rounded-md px-3 py-2 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
                 />
-                {errors.password && <p className="text-xs text-red-500">Senha inválida</p>}
+                {errors.password && <p className="text-sm text-red-500">Senha inválida</p>}
             </div>
-            <button
-                disabled={loading}
-                className={`${
-                    loading
-                        ? 'cursor-not-allowed border-gray-200 bg-gray-100'
-                        : 'border-black bg-black text-white hover:bg-white hover:text-black'
-                } flex h-10 w-full items-center justify-center rounded-md border text-sm transition-all focus:outline-none`}
-            >
+            <button disabled={loading} className={`btn btn-neutral ${loading ? 'cursor-not-allowed' : ''} normal-case`}>
                 {loading ? <LoadingDots color="#808080" /> : <p>{type === 'login' ? 'Entrar' : 'Criar conta'}</p>}
             </button>
             {type === 'login' ? (
