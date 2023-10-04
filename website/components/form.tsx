@@ -48,7 +48,7 @@ export default function Form({ type }: FormProps) {
 
                 setTimeout(() => {
                     router.push(searchParams.get('callbackUrl') ?? '/conta');
-                }, 2000);
+                }, 1000);
             }
         } else {
             const { requestId, registration, password } = data;
@@ -72,7 +72,7 @@ export default function Form({ type }: FormProps) {
 
                         setTimeout(() => {
                             router.push('/login');
-                        }, 2000);
+                        }, 1000);
                     } else {
                         const { message } = await res.json();
 
@@ -90,8 +90,8 @@ export default function Form({ type }: FormProps) {
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col space-y-4 px-4 py-8 sm:px-16">
             {type === 'register' && (
                 <div>
-                    <label htmlFor="requestId" className="block text-xs uppercase">
-                        ID
+                    <label htmlFor="requestId" className="label">
+                        <span className="label-text">ID</span>
                     </label>
                     <input
                         id="requestId"
@@ -101,33 +101,33 @@ export default function Form({ type }: FormProps) {
                         })}
                         type="text"
                         placeholder="ID do pedido de vinculação do cartão"
-                        className="mt-1 block w-full appearance-none rounded-md px-3 py-2 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
+                        className="input input-bordered w-full max-w-xs"
                     />
                     {errors.requestId && <p className="text-sm text-red-500">ID inválido</p>}
                 </div>
             )}
             <div>
-                <label htmlFor="registration" className="block text-xs uppercase">
-                    Matrícula
+                <label htmlFor="registration" className="label">
+                    <span className="label-text">Matrícula</span>
                 </label>
                 <input
                     id="registration"
                     {...register('registration', { required: true, pattern: /^\d{12}$/ })}
                     placeholder="Matrícula do SUAP"
-                    className="mt-1 block w-full appearance-none rounded-md px-3 py-2 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
+                    className="input input-bordered w-full max-w-xs"
                 />
                 {errors.registration && <p className="text-sm text-red-500">Matrícula inválida</p>}
             </div>
             <div>
-                <label htmlFor="password" className="block text-xs uppercase">
-                    Senha
+                <label htmlFor="password" className="label">
+                    <span className="label-text">Senha</span>
                 </label>
                 <input
                     id="password"
                     {...register('password', { required: true })}
                     type="password"
                     placeholder="Senha do SUAP"
-                    className="mt-1 block w-full appearance-none rounded-md px-3 py-2 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
+                    className="input input-bordered w-full max-w-xs"
                 />
                 {errors.password && <p className="text-sm text-red-500">Senha inválida</p>}
             </div>
@@ -137,7 +137,7 @@ export default function Form({ type }: FormProps) {
             {type === 'login' ? (
                 <p className="text-center text-sm">
                     Não tem uma conta?{' '}
-                    <Link href="/register" className="font-semibold">
+                    <Link href="/registro" className="font-semibold">
                         Criar uma conta
                     </Link>
                 </p>

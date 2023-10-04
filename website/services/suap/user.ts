@@ -70,7 +70,7 @@ export async function getUserData(sessionid: { value: string; expires: Date | nu
                 }
             });
 
-        const medicalInfo = withMedicalInfo ? await getMedicalInfo(page, registration) : undefined;
+        const medicalInfo = withMedicalInfo ? await getMedicalInfo(page) : undefined;
         await browser.close();
 
         return {
@@ -87,11 +87,20 @@ export async function getUserData(sessionid: { value: string; expires: Date | nu
     }
 }
 
-async function getMedicalInfo(page: Page, id: string) {
+async function getMedicalInfo(page: Page) {
     const bloodTypeHandle = await page.$x('//*[@id="content"]/div[4]/div[1]/div/table/tbody/tr[2]/td[4]');
     const bloodType = await page.evaluate(el => el.textContent, bloodTypeHandle[0]);
 
-    await page.goto(`https://suap.ifpb.edu.br/edu/aluno/${id}/`);
+    await page.goto(
+        (await page.evaluate(
+            () =>
+                (
+                    document.querySelector(
+                        '#content > ul.action-bar > li:nth-child(1) > ul > li:nth-child(1) > a',
+                    ) as HTMLAnchorElement
+                )?.href,
+        )) ?? 'https://suap.ifpb.edu.br/',
+    );
     await page.waitForNetworkIdle();
 
     const diseases = await page.evaluate(() => {
@@ -165,8 +174,6 @@ async function resizeAndConvertToBase64(inputPath: string, outputPath: string, o
     const base64Data = await read(outputPath).then(img => {
         return img.getBase64Async(outputFormat);
     });
-
-    console.log(base64Data);
 
     // Exclua as imagens de entrada e saída
     await unlink(inputPath);

@@ -1,6 +1,6 @@
 import { withAuth } from 'next-auth/middleware';
 
-const publicPages = ['/login', '/register'];
+const publicPages = ['/login', '/registro'];
 
 export default withAuth({
     callbacks: {

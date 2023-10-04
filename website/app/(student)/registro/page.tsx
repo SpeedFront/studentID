@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export default function SignUp() {
     return (
-        <div className="flex h-[80vh] items-center justify-center">
+        <div className="flex min-h-fit py-4 items-center justify-center">
             <div className="z-10 w-full lg:max-w-md overflow-hidden rounded-2xl lg:border border-[#555b5e] shadow-xl">
                 <div className="flex flex-col items-center justify-center space-y-3 border-b border-[#555b5e] px-4 py-6 pt-8 text-center sm:px-16">
                     <Link href="/">
