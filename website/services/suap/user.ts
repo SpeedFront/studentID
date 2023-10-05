@@ -29,12 +29,23 @@ export async function getUserData(sessionid: { value: string; expires: Date | nu
 
         const registrationHandle = await page.$x('//*[@id="content"]/div[3]/div/table/tbody/tr[2]/td[6]');
         const nameHandle = await page.$x('//*[@id="content"]/div[3]/div/table/tbody/tr[2]/td[2]');
-        const emailHandle = await page.$x('//*[@id="content"]/div[4]/div[4]/div/table/tbody/tr[3]/td[4]');
         const phoneNumberHandle = await page.$x('//*[@id="content"]/div[4]/div[4]/div/table/tbody/tr[2]/td[2]');
 
         const registration = await page.evaluate(el => el.textContent, registrationHandle[0]);
         const name = await page.evaluate(el => el.textContent, nameHandle[0]);
-        const email = await page.evaluate(el => el.textContent, emailHandle[0]);
+        const email = await page.evaluate(() => {
+            const academyEmail = document.querySelector(
+                '#content > div:nth-child(6) > div:nth-child(4) > div > table > tbody > tr:nth-child(3) > td:nth-child(2)',
+            )?.textContent;
+
+            if (/^[a-zA-Z0-9._%+-]+@academico\.ifpb\.edu\.br$/g.test(academyEmail ?? '')) {
+                return document.querySelector(
+                    '#content > div:nth-child(6) > div:nth-child(4) > div > table > tbody > tr:nth-child(3) > td:nth-child(4)',
+                )?.textContent;
+            } else {
+                return academyEmail;
+            }
+        });
 
         if (!registration || !name || !email) {
             await browser.close();
