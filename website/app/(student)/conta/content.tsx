@@ -10,9 +10,10 @@ import Image from 'next/image';
 
 interface UserAccountProps {
     user: User;
+    session: string;
 }
 
-const UserAccount = ({ user }: UserAccountProps) => {
+const UserAccount = ({ user, session }: UserAccountProps) => {
     const router = useRouter();
     const [blockForm, setBlockForm] = useState(true);
 
@@ -119,11 +120,45 @@ const UserAccount = ({ user }: UserAccountProps) => {
                         })}
                         disabled
                     />
+                    <button
+                        onClick={async () => {
+                            setLoading(true);
+
+                            try {
+                                const response = await fetch('/api/user/update/sync', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({ session }),
+                                });
+
+                                if (response.ok) {
+                                    toast.success('Usuário atualizado com sucesso!');
+                                    router.refresh();
+                                } else {
+                                    toast.error('Falha ao atualizar usuário...');
+                                }
+                            } catch (error) {
+                                toast.error(`Falha ao atualizar usuário: ${error?.toString() ?? 'Erro desconhecido'}`);
+                            }
+
+                            setLoading(false);
+                        }}
+                        className="btn btn-primary"
+                        disabled={loading || blockForm || !isValid}
+                    >
+                        {loading ? 'Atualizando...' : 'Sincronizar com o SUAP'}
+                    </button>
                     <div className="flex justify-evenly">
                         <SignOut type="button" className="btn btn-error">
                             Sair
                         </SignOut>
-                        <button type="submit" className="btn btn-primary" disabled={loading || blockForm || !isValid}>
+                        <button
+                            type="submit"
+                            className="btn btn-primary"
+                            disabled={loading || blockForm || !isValid || true}
+                        >
                             {!isDirty ? 'Editar' : loading ? 'Atualizando...' : 'Salvar'}
                         </button>
                     </div>

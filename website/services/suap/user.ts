@@ -39,11 +39,11 @@ export async function getUserData(sessionid: { value: string; expires: Date | nu
             )?.textContent;
 
             if (/^[a-zA-Z0-9._%+-]+@academico\.ifpb\.edu\.br$/g.test(academyEmail ?? '')) {
+                return academyEmail;
+            } else {
                 return document.querySelector(
                     '#content > div:nth-child(6) > div:nth-child(4) > div > table > tbody > tr:nth-child(3) > td:nth-child(4)',
                 )?.textContent;
-            } else {
-                return academyEmail;
             }
         });
 

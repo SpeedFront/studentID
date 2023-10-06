@@ -6,8 +6,9 @@ import Image from 'next/image';
 
 export type Props = Partial<ComponentProps<typeof Image> & { wide?: boolean }>;
 
-function LogoUrl(props: Props) {
+function LogoUrl(p: Props) {
     const { isDarkMode } = useDarkMode();
+    const { wide, ...props } = p;
 
     return (
         <Image
@@ -15,20 +16,22 @@ function LogoUrl(props: Props) {
             height={160}
             alt="Logo"
             {...props}
-            src={isDarkMode ? `/logo${props.wide ? '-wide' : ''}-dark.png` : `/logo${props.wide ? '-wide' : ''}.png`}
+            src={isDarkMode ? `/logo${wide ? '-wide' : ''}-dark.png` : `/logo${wide ? '-wide' : ''}.png`}
         />
     );
 }
 
-export function Logo(props: Props) {
+export function Logo(p: Props) {
     const [windowDefined, setWindowDefined] = useState(false);
 
     useEffect(() => {
         setWindowDefined(true);
     }, []);
 
+    const { wide, ...props } = p;
+
     return windowDefined ? (
-        <LogoUrl width={160} height={160} alt="Logo" {...props} />
+        <LogoUrl width={160} height={160} alt="Logo" {...props} wide={wide} />
     ) : (
         <Image width={160} height={160} alt="Logo" {...props} src="/logo.png" />
     );

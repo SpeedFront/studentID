@@ -33,13 +33,14 @@ const Navbar = async () => {
                             <FiSettings className="text-gray-800 text-3xl cursor-pointer hover:text-gray-600" />
                         ) : null}
                     </Link>
-                    <Link href={!session?.user ? '/login' : '/account'} className="btn btn-circle">
+                    <Link href={!session?.user ? '/login' : '/conta'} className="btn btn-circle">
                         {session?.user.avatar ? (
                             <Image
                                 src={`data:image/jpeg;base64,${session.user.avatar}`}
                                 alt={session.user.name + ' avatar'}
                                 width={48}
                                 height={48}
+                                className="rounded-full"
                             />
                         ) : (
                             <FiUser className="text-2xl" />

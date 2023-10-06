@@ -6,9 +6,9 @@ import UserAccount from './content';
 export default async function Account() {
     const session = await getServerSession(callbacks);
 
-    if (!session?.user) {
+    if (!session?.user || !session?.user.activeSessionId) {
         redirect('/login');
     }
 
-    return <UserAccount user={session.user} />;
+    return <UserAccount user={session.user} session={session.user.activeSessionId} />;
 }
