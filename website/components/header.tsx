@@ -1,4 +1,3 @@
-import { IoReorderThreeSharp } from 'react-icons/io5';
 import { FiUser, FiSettings } from 'react-icons/fi';
 import { getServerSession } from 'next-auth';
 import { callbacks } from '@/app/api/auth/[...nextauth]/route';
@@ -20,20 +19,20 @@ const Navbar = async () => {
     return (
         <header className="z-50 w-full sticky top-0 bg-neutral border-neutral-content border-b">
             <div className="w-full h-20 flex items-center justify-between">
-                <IoReorderThreeSharp className="text-gray-800 border-black border-2 p-2 rounded-full text-5xl cursor-pointer hover:text-gray-600 ml-[1%] block lg:hidden" />
-                <Link href="/" className="px-6 hidden sm:block">
-                    <Logo wide alt="Logo" width={130} height={75} />
+                {/* <IoReorderThreeSharp className="border-neutral-content border-2 p-2 rounded-full text-neutral-content text-5xl cursor-pointer ml-[1%] block lg:hidden" /> */}
+                <Link href="/" className="px-6">
+                    <Logo wide alt="Logo" width={130} height={75} mode="dark" />
                 </Link>
-                <div className="flex items-center space-x-4 max-w-[18%] ml-auto mr-[1%] sm:mr-4 lg:mr-6">
+                <div className="flex items-center space-x-4 ml-auto mr-[1%] sm:mr-4 lg:mr-6">
                     <Link
                         href={session?.user.role && session?.user.role !== 'USER' ? '/admin' : '/'}
                         className="cursor-pointer relative inline-flex items-center"
                     >
                         {session?.user.role && session?.user.role !== 'USER' ? (
-                            <FiSettings className="text-gray-800 text-3xl cursor-pointer hover:text-gray-600" />
+                            <FiSettings className="text-neutral-content text-3xl cursor-pointer" />
                         ) : null}
                     </Link>
-                    <Link href={!session?.user ? '/login' : '/conta'} className="btn btn-circle">
+                    <Link href={!session?.user ? '/login' : '/conta'} className="btn btn-circle border-black">
                         {session?.user.avatar ? (
                             <Image
                                 src={`data:image/jpeg;base64,${session.user.avatar}`}
@@ -46,13 +45,11 @@ const Navbar = async () => {
                             <FiUser className="text-2xl" />
                         )}
                     </Link>
-                    <div className="hidden lg:block">
-                        <ReactThemeToggleButton />
-                    </div>
+                    <ReactThemeToggleButton />
                 </div>
             </div>
-            <nav className="hidden lg:block w-full">
-                <ul className="block lg:flex">
+            <nav className="w-full">
+                <ul className="flex flex-wrap">
                     <ListItem className="text-neutral-content border-neutral-content border-r px-8" NavLink="/">
                         Início
                     </ListItem>

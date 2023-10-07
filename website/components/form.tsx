@@ -101,7 +101,7 @@ export default function Form({ type }: FormProps) {
                         })}
                         type="text"
                         placeholder="ID do pedido de vinculação do cartão"
-                        className="input input-bordered w-full max-w-xs"
+                        className="input input-bordered w-full lg:max-w-xs"
                     />
                     {errors.requestId && <p className="text-sm text-red-500">ID inválido</p>}
                 </div>
@@ -114,7 +114,7 @@ export default function Form({ type }: FormProps) {
                     id="registration"
                     {...register('registration', { required: true, pattern: /^\d{12}$/ })}
                     placeholder="Matrícula do SUAP"
-                    className="input input-bordered w-full max-w-xs"
+                    className="input input-bordered w-full lg:max-w-xs"
                 />
                 {errors.registration && <p className="text-sm text-red-500">Matrícula inválida</p>}
             </div>
@@ -127,7 +127,7 @@ export default function Form({ type }: FormProps) {
                     {...register('password', { required: true })}
                     type="password"
                     placeholder="Senha do SUAP"
-                    className="input input-bordered w-full max-w-xs"
+                    className="input input-bordered w-full lg:max-w-xs"
                 />
                 {errors.password && <p className="text-sm text-red-500">Senha inválida</p>}
             </div>

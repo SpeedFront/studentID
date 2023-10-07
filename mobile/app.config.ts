@@ -2,8 +2,8 @@ import type { ConfigContext, ExpoConfig } from '@expo/config';
 
 export default (_context: ConfigContext): ExpoConfig => {
     return {
-        name: 'studentID - IFPB',
-        slug: 'studentID',
+        name: 'StudentID - IFPB',
+        slug: 'StudentID',
         version: '1.0.0',
         orientation: 'portrait',
         icon: './assets/icon.png',

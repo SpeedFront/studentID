@@ -1,6 +1,12 @@
+import type { Metadata } from 'next/types';
 import { Logo } from '@/components/logo';
 import Form from '@/components/form';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+    title: 'StudentID - Registro',
+    description: 'Página de registro do StudentID',
+};
 
 export default function SignUp() {
     return (
@@ -10,10 +16,8 @@ export default function SignUp() {
                     <Link href="/">
                         <Logo priority className="h-40 w-40" width={160} height={160} />
                     </Link>
-                    <h3 className="text-xl font-semibold text-white">Vincule seu crachá</h3>
-                    <p className="text-sm text-gray-400">
-                        Preencha os campos abaixo para vincular seu crachá a sua conta do SUAP.
-                    </p>
+                    <h3 className="text-xl font-semibold">Vincule seu crachá</h3>
+                    <p className="text-sm">Preencha os campos abaixo para vincular seu crachá a sua conta do SUAP.</p>
                 </div>
                 <Form type="register" />
             </div>

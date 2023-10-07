@@ -1,6 +1,7 @@
 module.exports = {
     content: ['./app/**/*.{js,ts,jsx,tsx}', './pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
-    plugins: [require('daisyui')],
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    plugins: [require('daisyui'), require('tailwind-scrollbar')({ nocompatible: true })],
     daisyui: {
         themes: [
             {
@@ -13,7 +14,7 @@ module.exports = {
                     info: '#3abff8',
                     success: '#36d399',
                     warning: '#fbbd23',
-                    error: '#f87272',
+                    error: 'red',
                 },
                 mythemelight: {
                     primary: '#641ae6',
@@ -24,7 +25,7 @@ module.exports = {
                     info: '#3abff8',
                     success: '#36d399',
                     warning: '#fbbd23',
-                    error: '#f87272',
+                    error: 'red',
                 },
             },
         ],

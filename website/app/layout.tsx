@@ -36,7 +36,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     try {
         return (
             <html lang="pt-BR">
-                <body className={clsx(inter.variable, 'min-h-screen')}>{children}</body>
+                <body
+                    className={clsx(
+                        inter.variable,
+                        'min-h-screen scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-gray-100 dark:scrollbar-track-gray-800 dark:scrollbar-thumb-gray-100',
+                    )}
+                >
+                    {children}
+                </body>
             </html>
         );
     } catch {

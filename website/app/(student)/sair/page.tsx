@@ -1,9 +1,15 @@
 'use client';
 
+import type { Metadata } from 'next/types';
 import { useEffect } from 'react';
 import { signOut } from 'next-auth/react';
 import { Logo } from '@/components/logo';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+    title: 'Saindo...',
+    description: 'Saindo...',
+};
 
 export default function Login() {
     useEffect(() => {
