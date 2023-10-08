@@ -1,9 +1,8 @@
 'use client';
 
 import type { MedicalInfo, User } from '@prisma/client';
-import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { useState } from 'react';
 import SignOut from '@/components/sign-out';
 import toast from 'react-hot-toast';
 import Image from 'next/image';

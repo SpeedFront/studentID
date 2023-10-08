@@ -22,10 +22,36 @@ export async function POST(req: Request) {
                 rfid,
             },
         })
-        .catch(() => undefined);
+        .catch(e => (e?.toString() ?? '') as string);
 
     if (!creationRequest) {
         return NextResponse.json({ status: 'error', message: 'Erro ao criar requisição' }, { status: 400 });
+    } else if (typeof creationRequest === 'string') {
+        if (creationRequest.includes('Unique constraint failed on the fields: (`rfid`)')) {
+            const existingRequest = await prisma.creationRequest.findUnique({
+                where: { rfid },
+            });
+
+            if (existingRequest && existingRequest.expiresAt > new Date()) {
+                return NextResponse.json({
+                    status: 'error',
+                    message: `Já existe uma requisição pendente para o RFID, o ID da requisição é: ${existingRequest.id}`,
+                });
+            } else if (existingRequest) {
+                await prisma.creationRequest.delete({
+                    where: { id: existingRequest.id },
+                });
+
+                return NextResponse.json(
+                    { status: 'error', message: 'Solitação expirada, tente novamente para criar outra!' },
+                    { status: 400 },
+                );
+            }
+
+            return NextResponse.json({ status: 'error', message: 'Erro ao criar requisição' }, { status: 400 });
+        } else {
+            return NextResponse.json({ status: 'error', message: creationRequest }, { status: 400 });
+        }
     }
 
     return NextResponse.json({

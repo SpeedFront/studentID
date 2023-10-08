@@ -17,13 +17,31 @@ export async function POST(req: Request) {
         where: { id: doorId },
     });
 
-    if (!user) {
-        return NextResponse.json(
-            { status: 'error', message: 'Esse crachá não está vinculado a nenhum aluno...' },
-            { status: 400 },
-        );
-    } else if (!door) {
-        return NextResponse.json({ status: 'error', message: 'Porta não encontrada' }, { status: 400 });
+    if (!door) {
+        return NextResponse.json({ status: 'error', message: 'Porta não encontrada' }, { status: 401 });
+    } else if (!user) {
+        const request = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/user/add/request/`, {
+            method: 'POST',
+            body: JSON.stringify({ rfid, doorId }),
+        });
+
+        try {
+            const response = await request.json();
+
+            if (response.status === 'success') {
+                return NextResponse.json(response);
+            } else {
+                return NextResponse.json(
+                    {
+                        status: 'error',
+                        message: response.error ?? response.message ?? '',
+                    },
+                    { status: 401 },
+                );
+            }
+        } catch (e) {
+            return NextResponse.json({ status: 'error', message: (e as Error)?.toString() }, { status: 401 });
+        }
     }
 
     try {

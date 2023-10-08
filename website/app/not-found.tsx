@@ -1,8 +1,13 @@
-// Página de erro 404 padrão do serviço com um aviso e o link de retorno para o login do SUAP.
+// Página de erro 404 padrão do serviço com um aviso e o link de retorno.
+'use client';
+
+import { useRouter } from 'next/navigation';
 import { Logo } from '@/components/logo';
 import Link from 'next/link';
 
 export default function NotFound() {
+    const router = useRouter();
+
     return (
         <div className="flex h-screen w-screen items-center justify-center">
             <div className="z-10 w-full max-w-md overflow-hidden rounded-2xl border shadow-xl">
@@ -12,9 +17,9 @@ export default function NotFound() {
                     </Link>
                     <h3 className="text-xl font-semibold">Página não encontrada</h3>
                     <p className="text-sm text-gray-400">A página que você está tentando acessar não existe.</p>
-                    <Link href="/login" className="btn btn-primary normal-case">
-                        Voltar para o login
-                    </Link>
+                    <button onClick={() => router.back()} className="btn btn-primary normal-case">
+                        Voltar
+                    </button>
                 </div>
             </div>
         </div>
