@@ -17,6 +17,7 @@
         "@prisma/client": "^5.4.2",
         "@sparticuz/chromium-min": "^117.0.0",
         "clsx": "^2.0.0",
+        "dayjs": "^1.11.10",
         "file-extension": "^4.0.5",
         "jimp": "^0.22.10",
         "next": "^13.5.4",
