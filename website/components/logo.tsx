@@ -16,6 +16,7 @@ function LogoUrl(p: Props) {
             height={160}
             alt="Logo"
             {...props}
+            priority
             src={
                 mode === undefined
                     ? isDarkMode

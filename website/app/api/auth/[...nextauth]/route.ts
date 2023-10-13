@@ -84,8 +84,8 @@ export const authOptions: NextAuthOptions = {
     callbacks: callbacks.callbacks,
     pages: {
         signIn: '/login',
-        signOut: '/signout',
-        newUser: '/account',
+        signOut: '/sair',
+        newUser: '/conta',
     },
 };
 

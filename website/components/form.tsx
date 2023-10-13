@@ -7,9 +7,11 @@ import { signIn } from 'next-auth/react';
 import LoadingDots from './loading-dots';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
+import clsx from 'clsx';
 
 type FormValues = {
-    requestId: string;
+    requestId?: string;
+    approveTerms?: boolean;
     registration: string;
     password: string;
 };
@@ -20,12 +22,17 @@ type FormProps = {
 
 export default function Form({ type }: FormProps) {
     const [loading, setLoading] = useState(false);
+
     const router = useRouter();
     const {
         register,
         handleSubmit,
+        watch,
         formState: { errors },
     } = useForm<FormValues>();
+
+    const approveTerms = watch('approveTerms');
+    const disabled = loading || (type === 'register' && !approveTerms);
 
     const searchParams = useSearchParams();
 
@@ -45,12 +52,15 @@ export default function Form({ type }: FormProps) {
                 toast.error(response.error);
             } else {
                 toast.success('Logado com sucesso! Redirecionando...');
-
-                setTimeout(() => {
-                    router.push(searchParams.get('callbackUrl') ?? '/conta');
-                }, 1000);
+                router.push(searchParams.get('callbackUrl') ?? '/conta');
             }
         } else {
+            if (!data.approveTerms) {
+                toast.error('Você precisa aceitar os termos de uso!');
+                setLoading(false);
+                return;
+            }
+
             const { requestId, registration, password } = data;
 
             if (requestId) {
@@ -69,10 +79,7 @@ export default function Form({ type }: FormProps) {
 
                     if (res.status === 200) {
                         toast.success('Conta criado com sucesso! Redirecionando para a página de login...');
-
-                        setTimeout(() => {
-                            router.push('/login');
-                        }, 1000);
+                        router.push('/login');
                     } else {
                         const { message } = await res.json();
 
@@ -88,24 +95,6 @@ export default function Form({ type }: FormProps) {
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col space-y-4 px-4 py-8 sm:px-16">
-            {type === 'register' && (
-                <div>
-                    <label htmlFor="requestId" className="label">
-                        <span className="label-text">ID</span>
-                    </label>
-                    <input
-                        id="requestId"
-                        {...register('requestId', {
-                            required: true,
-                            pattern: /^\d+$/,
-                        })}
-                        type="text"
-                        placeholder="ID do pedido de vinculação do cartão"
-                        className="input input-bordered w-full lg:max-w-xs"
-                    />
-                    {errors.requestId && <p className="text-sm text-red-500">ID inválido</p>}
-                </div>
-            )}
             <div>
                 <label htmlFor="registration" className="label">
                     <span className="label-text">Matrícula</span>
@@ -131,7 +120,47 @@ export default function Form({ type }: FormProps) {
                 />
                 {errors.password && <p className="text-sm text-red-500">Senha inválida</p>}
             </div>
-            <button disabled={loading} className={`btn btn-neutral ${loading ? 'cursor-not-allowed' : ''} normal-case`}>
+            {type === 'register' && (
+                <div>
+                    <label htmlFor="requestId" className="label">
+                        <span className="label-text">ID</span>
+                    </label>
+                    <input
+                        id="requestId"
+                        {...register('requestId', {
+                            required: true,
+                            pattern: /^\d+$/,
+                        })}
+                        type="text"
+                        placeholder="ID do pedido de vinculação do cartão"
+                        className="input input-bordered w-full lg:max-w-xs"
+                    />
+                    {errors.requestId && <p className="text-sm text-red-500">ID inválido</p>}
+                </div>
+            )}
+            {type === 'register' && (
+                <div className="flex items-center space-x-2">
+                    <input
+                        id="approveTerms"
+                        {...register('approveTerms', { required: true })}
+                        type="checkbox"
+                        className="checkbox checkbox-accent"
+                    />
+                    <label htmlFor="approveTerms">
+                        <span className="label-text">
+                            Aceito os{' '}
+                            <Link className="text-accent font-extrabold" href="/termos">
+                                termos de uso
+                            </Link>
+                        </span>
+                    </label>
+                </div>
+            )}
+            <button
+                type="submit"
+                disabled={disabled}
+                className={clsx({ 'cursor-not-allowed': disabled }, `btn btn-neutral normal-case`)}
+            >
                 {loading ? <LoadingDots color="#808080" /> : <p>{type === 'login' ? 'Entrar' : 'Criar conta'}</p>}
             </button>
             {type === 'login' ? (

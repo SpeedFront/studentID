@@ -16,3 +16,12 @@
         height: unset !important;
     }
 }
+
+.ul-style ul {
+    @apply list-disc;
+}
+
+.ul-style ul li {
+    @apply ml-4;
+    @apply mb-2;
+}
