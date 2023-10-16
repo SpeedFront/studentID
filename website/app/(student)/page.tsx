@@ -1,4 +1,5 @@
 import type { Metadata } from 'next/types';
+import { redirect } from 'next/navigation';
 import { Logo } from '@/components/logo';
 
 export const metadata: Metadata = {
@@ -7,6 +8,8 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
+    redirect('/conta');
+
     return (
         <div className="flex h-[85vh] w-full flex-col justify-center items-center">
             <Logo width={512} height={512} className="w-48 h-48" />

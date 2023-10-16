@@ -42,10 +42,28 @@ export async function POST(req: Request) {
                     where: { id: existingRequest.id },
                 });
 
-                return NextResponse.json(
-                    { status: 'error', message: 'Solitação expirada, tente novamente para criar outra!' },
-                    { status: 400 },
-                );
+                const request = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/user/add/request/`, {
+                    method: 'POST',
+                    body: JSON.stringify({ rfid, doorId }),
+                });
+
+                try {
+                    const response = await request.json();
+
+                    if (response.status === 'success') {
+                        return NextResponse.json(response);
+                    } else {
+                        return NextResponse.json(
+                            {
+                                status: 'error',
+                                message: response.error ?? response.message ?? '',
+                            },
+                            { status: request.status },
+                        );
+                    }
+                } catch (e) {
+                    return NextResponse.json({ status: 'error', message: (e as Error)?.toString() }, { status: 401 });
+                }
             }
 
             return NextResponse.json({ status: 'error', message: 'Erro ao criar requisição' }, { status: 400 });

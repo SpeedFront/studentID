@@ -1,20 +1,18 @@
-import { type Session, getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth';
 import { callbacks } from '@/app/api/auth/[...nextauth]/route';
 import { notFound } from 'next/navigation';
 import { Toaster } from 'react-hot-toast';
 import { Drawer } from '@/components/admin/header';
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
+export const adminRole = ['ADMIN', 'SUPER_ADMIN'];
+
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
     const session = await getServerSession(callbacks);
 
-    if (session?.user.role === undefined || session?.user.role === 'USER') {
+    if (!session?.user.role || !adminRole.includes(session.user.role)) {
         notFound();
     }
 
-    return <Content session={session}>{children}</Content>;
-}
-
-const Content = ({ children, session }: { children: React.ReactNode; session: Session }) => {
     return (
         <>
             <Toaster position="top-center" />
@@ -23,4 +21,4 @@ const Content = ({ children, session }: { children: React.ReactNode; session: Se
             </Drawer>
         </>
     );
-};
+}

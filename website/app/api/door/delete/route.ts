@@ -6,19 +6,18 @@ import { suapLogin } from '@/services/suap/login';
 import prisma from '@/lib/prisma';
 
 export async function POST(req: Request) {
-    const { username, password, doorId, name, description, session } = await req.json();
+    const { id, username, password, session, doorId } = await req.json();
 
     let user: Partial<User> | undefined = undefined;
 
     if (typeof session !== 'string') {
-        if (!/^\d+$/.test(username)) {
+        if (!/^\d+$/.test(username) && (!/^\d+$/.test(id) || id === undefined)) {
             return NextResponse.json({ status: 'error', message: 'Matrícula inválida' }, { status: 400 });
         } else if (
+            (id !== undefined && typeof id !== 'string') ||
             typeof username !== 'string' ||
             typeof password !== 'string' ||
             typeof doorId !== 'string' ||
-            (typeof name !== 'string' && name.length <= 0) ||
-            (typeof description !== 'string' && description.length <= 0) ||
             username.length <= 0 ||
             password.length <= 0 ||
             doorId.length <= 0
@@ -34,7 +33,7 @@ export async function POST(req: Request) {
 
         user =
             (await prisma.user.findUnique({
-                where: { id: username },
+                where: { id: id ?? username },
             })) ?? undefined;
     } else {
         const userSuap = await getUserData({
@@ -66,12 +65,8 @@ export async function POST(req: Request) {
     }
 
     const updatedDoor = await prisma.door
-        .update({
+        .delete({
             where: { id: doorId },
-            data: {
-                name,
-                description,
-            },
         })
         .catch(() => undefined);
 
@@ -81,6 +76,6 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
         status: 'success',
-        message: `Porta atualizada com sucesso! ID: ${updatedDoor.id}`,
+        message: `Porta deletada com sucesso!`,
     });
 }

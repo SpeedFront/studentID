@@ -36,7 +36,7 @@ export async function POST(req: Request) {
                         status: 'error',
                         message: response.error ?? response.message ?? '',
                     },
-                    { status: 401 },
+                    { status: request.status },
                 );
             }
         } catch (e) {
