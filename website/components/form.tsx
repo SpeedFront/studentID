@@ -28,11 +28,11 @@ export default function Form({ type }: FormProps) {
         register,
         handleSubmit,
         watch,
-        formState: { errors },
+        formState: { errors, isValid },
     } = useForm<FormValues>();
 
     const approveTerms = watch('approveTerms');
-    const disabled = loading || (type === 'register' && !approveTerms);
+    const disabled = loading || (type === 'register' && !approveTerms) || !isValid;
 
     const searchParams = useSearchParams();
 

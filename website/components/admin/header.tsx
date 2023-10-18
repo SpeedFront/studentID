@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import { AiOutlineHome, AiOutlineMenu } from 'react-icons/ai';
 import { FaDoorOpen } from 'react-icons/fa';
+//TODO import { PiStudent } from 'react-icons/pi';
 
 type DrawerItem = {
     icon: React.ReactNode;
@@ -22,6 +23,11 @@ export const adminDrawerItems: DrawerItem[] = [
         name: 'Portas',
         href: '/admin/portas',
     },
+    /*{
+        icon: <PiStudent size={22} />,
+        name: 'Alunos',
+        href: '/admin/alunos',
+    },*/
 ];
 
 export const superAdminDrawerItems: DrawerItem[] = [...adminDrawerItems];
