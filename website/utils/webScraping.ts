@@ -10,7 +10,7 @@ export async function newPage(
     args?: PuppeteerLaunchOptions,
 ) {
     const localOptions: PuppeteerLaunchOptions = {
-        headless: process.env.NODE_ENV !== 'development' ? false : 'new',
+        headless: process.env.NODE_ENV === 'development' ? false : 'new',
         args: [
             '--allow-external-pages',
             '--allow-third-party-modules',
@@ -26,7 +26,7 @@ export async function newPage(
 
     let options: PuppeteerLaunchOptions = localOptions;
 
-    if (process.env.USE_SERVER_CHROMIUM === 'true' || process.env.NODE_ENV !== 'development') {
+    if (process.env.USE_SERVER_CHROMIUM === 'true') {
         const chromium = (await import('@sparticuz/chromium-min')).default;
         options = {
             args: [...chromium.args, '--hide-scrollbars', '--disable-web-security'],
