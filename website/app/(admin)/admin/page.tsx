@@ -12,9 +12,7 @@ export default function Home() {
             <Logo width={512} height={512} className="w-48 h-48" />
             <div className="text-center max-w-screen-sm mb-10">
                 <h1 className="font-bold text-2xl">Página de administração</h1>
-                <p className="text-base text-neutral-content">
-                    Use o menu lateral para navegar entre as páginas de administração.
-                </p>
+                <p className="text-base">Use o menu lateral para navegar entre as páginas de administração.</p>
             </div>
         </div>
     );

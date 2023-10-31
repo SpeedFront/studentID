@@ -6,20 +6,20 @@ import { suapLogin } from '@/services/suap/login';
 import prisma from '@/lib/prisma';
 
 export async function POST(req: Request) {
-    const { username, password, session, suapId } = await req.json();
+    const { username, password, session, userId } = await req.json();
 
     let user: Partial<User> | undefined = undefined;
 
     if (typeof session !== 'string') {
-        if (!/^\d+$/.test(username) || !/^\d+$/.test(suapId)) {
+        if (!/^\d+$/.test(username) || !/^\d+$/.test(userId)) {
             return NextResponse.json({ status: 'error', message: 'Matrícula inválida' }, { status: 400 });
         } else if (
             typeof username !== 'string' ||
             typeof password !== 'string' ||
-            typeof suapId !== 'string' ||
+            typeof userId !== 'string' ||
             username.length <= 0 ||
             password.length <= 0 ||
-            suapId.length <= 0
+            userId.length <= 0
         ) {
             return NextResponse.json({ status: 'error', message: 'Campos em falta' }, { status: 400 });
         }
@@ -56,16 +56,16 @@ export async function POST(req: Request) {
     }
 
     const userD = await prisma.user.findUnique({
-        where: { suapId },
+        where: { id: userId },
     });
 
     if (!userD) {
-        return NextResponse.json({ status: 'error', message: 'Porta não encontrada' }, { status: 400 });
+        return NextResponse.json({ status: 'error', message: 'Aluno não encontrado' }, { status: 400 });
     }
 
     const deletedUser = await prisma.user
         .delete({
-            where: { suapId },
+            where: { id: user.id },
         })
         .catch(() => undefined);
 

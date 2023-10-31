@@ -100,7 +100,7 @@ const UserAccount = ({
             </div>
             <dialog id="medical_info_modal" className="modal">
                 {/* Modal onde será mostrado as infos médica e poderá ser editada apenas as alergias do aluno, demais campos serão retratados apenas como texto */}
-                <div className="bg-neutral text-neutral-content flex flex-col w-full max-w-md items-stretch space-y-4 p-10 py-7 rounded-lg md:border">
+                <div className="bg-neutral text-neutral-content flex flex-col overflow-auto scrollbar-thin h-screen w-full md:max-w-md items-stretch space-y-4 px-10 pt-7 pb-4 md:rounded-lg md:h-[80vh] md:border">
                     <h1 className="text-2xl font-bold">Dados Médicos</h1>
                     <hr className="border-gray-400" />
                     <div className="flex flex-col space-y-4">
@@ -111,7 +111,7 @@ const UserAccount = ({
                             <input
                                 type="text"
                                 id="bloodType"
-                                className="input w-full"
+                                className="bg-neutral w-full"
                                 placeholder="Tipo sanguíneo"
                                 value={bloodType ?? ''}
                                 disabled
@@ -124,9 +124,9 @@ const UserAccount = ({
                             <input
                                 type="text"
                                 id="deficiencies"
-                                className="input w-full"
+                                className="bg-neutral w-full"
                                 placeholder="Deficiências"
-                                value={deficiencies ?? ''}
+                                value={deficiencies?.join(', ') ?? ''}
                                 disabled
                             />
                         </div>
@@ -137,9 +137,9 @@ const UserAccount = ({
                             <input
                                 type="text"
                                 id="diseases"
-                                className="input w-full"
+                                className="bg-neutral w-full"
                                 placeholder="Doenças"
-                                value={diseases ?? ''}
+                                value={diseases?.join(', ') ?? ''}
                                 disabled
                             />
                         </div>
@@ -150,9 +150,9 @@ const UserAccount = ({
                             <input
                                 type="text"
                                 id="medications"
-                                className="input w-full"
+                                className="bg-neutral w-full"
                                 placeholder="Medicamentos"
-                                value={medications ?? ''}
+                                value={medications?.join(', ') ?? ''}
                                 disabled
                             />
                         </div>
@@ -163,9 +163,9 @@ const UserAccount = ({
                             <input
                                 type="text"
                                 id="allergies"
-                                className="input w-full"
+                                className="bg-neutral w-full"
                                 placeholder="Alergias"
-                                value={allergies ?? ''}
+                                value={allergies?.join(', ') ?? ''}
                                 disabled
                             />
                         </div>
@@ -176,7 +176,7 @@ const UserAccount = ({
                             <input
                                 type="text"
                                 id="useHearingAid"
-                                className="input w-full"
+                                className="bg-neutral w-full"
                                 placeholder="Usa aparelho auditivo?"
                                 value={useHearingAid ? 'Sim' : 'Não'}
                                 disabled
@@ -189,7 +189,7 @@ const UserAccount = ({
                             <input
                                 type="text"
                                 id="useWheelchair"
-                                className="input w-full"
+                                className="bg-neutral w-full"
                                 placeholder="Usa cadeira de rodas?"
                                 value={useWheelchair ? 'Sim' : 'Não'}
                                 disabled

@@ -119,7 +119,9 @@ export function getContentOfFolderOrFile(dirPath: string, getContentOfFiles?: bo
 }
 
 export function createAndWriteFile(filePath: string, data: string | NodeJS.ArrayBufferView) {
-    filePath = resolve(filePath.replaceAll('\\', '/'));
+    if (process.platform !== 'win32') {
+        filePath = resolve(filePath.replaceAll('\\', '/'));
+    }
     const paths = ['/', ...dirname(filePath).split('/')];
 
     paths.reduce((acc, curr) => {

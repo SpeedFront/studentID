@@ -13,8 +13,10 @@ model Session {
   id           String   @id @default(cuid())
   sessionToken String   @unique @map("session_token") // Session token (used for authentication)
   expiresAt    DateTime @default(dbgenerated("now() + interval '8 hours'")) @map("expires_at") // Timestamp of expiration
-  userId       String   @map("user_id") // User who owns the session
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String?  @map("user_id") // User who owns the session
+  user         User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  driverId     String?  @map("driver_id") // Driver who owns the session
+  driver       Driver?  @relation(fields: [driverId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now()) @map("created_at") // Timestamp of session creation
   updatedAt DateTime @updatedAt @map("updated_at") // Timestamp of last update
@@ -24,6 +26,20 @@ enum Role {
   SUPER_ADMIN // Super admin
   ADMIN // Admin
   USER // User
+}
+
+model Driver {
+  id          String      @id @default(cuid())
+  rfid        String      @unique // Driver's RFID (unique)
+  name        String // Driver's name
+  email       String?     @unique // Driver's email (unique)
+  phoneNumber String      @map("phone_number") // Driver's phone number
+  avatar      String // URL of driver's profile picture
+  sessions    Session[] // Sessions opened by the driver
+  accesses    AccessLog[] // Access logs of the driver
+
+  createdAt DateTime @default(now()) @map("created_at") // Timestamp of driver creation
+  updatedAt DateTime @updatedAt @map("updated_at") // Timestamp of last update
 }
 
 model User {
@@ -60,11 +76,13 @@ model MedicalInfo {
 }
 
 model AccessLog {
-  id     String @id @default(cuid())
-  userId String @map("user_id") // User who opened the door
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  doorId String @map("door_id") // Door that was opened
-  door   Door   @relation(fields: [doorId], references: [id], onDelete: Cascade)
+  id       String  @id @default(cuid())
+  userId   String? @map("user_id") // User who opened the door
+  user     User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  driver   Driver? @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  driverId String? @map("driver_id") // Driver who opened the door
+  doorId   String  @map("door_id") // Door that was opened
+  door     Door    @relation(fields: [doorId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now()) @map("created_at") // Timestamp of access log creation
   updatedAt DateTime @updatedAt @map("updated_at") // Timestamp of last update

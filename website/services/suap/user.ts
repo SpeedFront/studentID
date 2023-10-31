@@ -1,8 +1,10 @@
 import { type Page } from 'puppeteer';
-import { read, MIME_JPEG } from 'jimp';
+import * as Jimp from 'jimp';
 import { downloadFile } from '@/utils/files';
 import { newPage } from '@/utils/webScraping';
 import { unlink } from 'fs/promises';
+
+const { read, MIME_JPEG } = Jimp;
 
 export interface UserData {
     registration: string;

@@ -186,7 +186,7 @@ export function List({ doors, session }: { doors: Door[]; session: string }) {
                                 <label htmlFor="name" className="text-lg font-semibold">
                                     ID
                                 </label>
-                                <input className="input w-full" disabled value={selectedDoor.id} />
+                                <input className="bg-neutral w-full cursor-text" disabled value={selectedDoor.id} />
                             </div>
                         )}
                         <div className="flex flex-col space-y-2">
@@ -196,7 +196,7 @@ export function List({ doors, session }: { doors: Door[]; session: string }) {
                             <input
                                 type="text"
                                 id="name"
-                                className="input w-full"
+                                className="input w-full !text-black dark:!text-neutral-content"
                                 placeholder="Nome"
                                 {...register('name', { required: true })}
                             />
@@ -208,7 +208,7 @@ export function List({ doors, session }: { doors: Door[]; session: string }) {
                             <input
                                 type="text"
                                 id="description"
-                                className="input w-full"
+                                className="input w-full !text-black dark:!text-neutral-content"
                                 placeholder="Descrição"
                                 {...register('description', { required: true })}
                             />

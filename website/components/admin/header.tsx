@@ -4,7 +4,8 @@ import Link from 'next/link';
 
 import { AiOutlineHome, AiOutlineMenu } from 'react-icons/ai';
 import { FaDoorOpen } from 'react-icons/fa';
-//TODO import { PiStudent } from 'react-icons/pi';
+import { PiStudent } from 'react-icons/pi';
+import SwitchThemeWrapper from '../theme-button';
 
 type DrawerItem = {
     icon: React.ReactNode;
@@ -14,20 +15,20 @@ type DrawerItem = {
 
 export const adminDrawerItems: DrawerItem[] = [
     {
-        icon: <AiOutlineHome size={22} />,
+        icon: <AiOutlineHome size={22} className="text-neutral-content" />,
         name: 'Início',
         href: '/admin',
     },
     {
-        icon: <FaDoorOpen size={22} />,
+        icon: <FaDoorOpen size={22} className="text-neutral-content" />,
         name: 'Portas',
         href: '/admin/portas',
     },
-    /*{
-        icon: <PiStudent size={22} />,
+    {
+        icon: <PiStudent size={22} className="text-neutral-content" />,
         name: 'Alunos',
         href: '/admin/alunos',
-    },*/
+    },
 ];
 
 export const superAdminDrawerItems: DrawerItem[] = [...adminDrawerItems];
@@ -58,7 +59,8 @@ export const Drawer = async ({
                                 <li>
                                     <div className="flex items-end justify-start">
                                         {icon}
-                                        <p>{name}</p>
+                                        <p className="text-neutral-content">{name}</p>
+                                        <SwitchThemeWrapper />
                                     </div>
                                 </li>
                             </Link>

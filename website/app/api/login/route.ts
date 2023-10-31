@@ -1,3 +1,4 @@
+//TODO: Adaptar para o novo sistema de login sem NextAuth para uso no React Native
 import { NextResponse } from 'next/server';
 import { getUserData } from '@/services/suap/user';
 import { suapLogin } from '@/services/suap/login';

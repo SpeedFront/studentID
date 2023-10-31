@@ -1,7 +1,7 @@
 // These styles apply to every route in the application
 import '@/styles/globals.css';
 
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { notFound } from 'next/navigation';
 import { Inter } from 'next/font/google';
 import clsx from 'clsx';
@@ -25,12 +25,15 @@ export async function generateMetadata() {
                 description,
             },
             metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
-            themeColor: '#FFF',
         } as Metadata;
     } catch {
         notFound();
     }
 }
+
+export const viewport: Viewport = {
+    themeColor: '#FFF',
+};
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
     try {
