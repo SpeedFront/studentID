@@ -39,11 +39,11 @@ export const Content = ({ door }: { user?: User; door?: Door }) => {
             if (res.ok) {
                 const data = await res.json();
 
-                if (data?.message.includes('ID ')) {
-                    toast.success(data.message);
+                if (data?.message.includes('ID ') || data?.message.includes('ID: ')) {
+                    toast.success(data.message, { duration: 10000 });
                     push(`/registro/?id=${data.message.replace(/\D/g, '')}`);
                 } else {
-                    toast.success(data.message);
+                    toast.success(data.message, { duration: 10000 });
                     push(`/historico`);
                 }
             } else {
@@ -66,7 +66,7 @@ export const Content = ({ door }: { user?: User; door?: Door }) => {
                     <Logo />
                     <h3 className="text-xl font-semibold">Demonstração do leitor de crachás</h3>
                     <p className="text-sm text-gray-400">
-                        Digite o código do crachá abaixo para ver o resultado da requisição. (Ex.: 27:41:AA:AB)
+                        Digite o código do crachá abaixo para ver o resultado da requisição. (Ex.: 04:90:92:42:EC:4C:81)
                     </p>
                 </div>
                 <div className="flex flex-col items-center justify-center space-y-3 px-4 py-6 pt-8 text-center sm:px-16">
@@ -75,7 +75,7 @@ export const Content = ({ door }: { user?: User; door?: Door }) => {
                             type="text"
                             placeholder="Código do crachá"
                             className="input input-bordered"
-                            {...register('rfid', { required: true, pattern: /^[0-9A-Fa-f]{2}(:[0-9A-Fa-f]{2}){3}$/ })}
+                            {...register('rfid', { required: true, pattern: /^[0-9A-Fa-f]{2}(:[0-9A-Fa-f]{2}){6}$/ })}
                         />
                         <button className="btn btn-primary normal-case" disabled={loading || !isValid}>
                             Enviar
