@@ -1,6 +1,6 @@
 import { withAuth } from 'next-auth/middleware';
 
-const publicPages = ['/login', '/registro', '/termos'];
+const publicPages = ['/login', '/registro', '/termos', '/demonstracao'];
 
 function addHours(date: Date, hours: number) {
     date.setTime(date.getTime() + hours * 60 * 60 * 1000);

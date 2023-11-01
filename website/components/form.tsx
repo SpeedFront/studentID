@@ -24,17 +24,21 @@ export default function Form({ type }: FormProps) {
     const [loading, setLoading] = useState(false);
 
     const router = useRouter();
+    const searchParams = useSearchParams();
     const {
         register,
         handleSubmit,
         watch,
         formState: { errors, isValid },
-    } = useForm<FormValues>();
+    } = useForm<FormValues>({
+        defaultValues: {
+            registration: searchParams.get('registration') ?? '',
+            requestId: searchParams.get('id') ?? '',
+        },
+    });
 
     const approveTerms = watch('approveTerms');
     const disabled = loading || (type === 'register' && !approveTerms) || !isValid;
-
-    const searchParams = useSearchParams();
 
     const onSubmit = async (data: FormValues) => {
         setLoading(true);
