@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-export function NavigationBar({ page, totalPages }: { page: number; totalPages: number }) {
+export function NavigationBar({ page, totalPages }: Readonly<{ page: number; totalPages: number }>) {
     const [loading, setLoading] = useState(false);
     const { push } = useRouter();
 

@@ -12,9 +12,9 @@ dayjs.locale('pt-br');
 
 export default async function HistoricoPage({
     searchParams,
-}: {
+}: Readonly<{
     searchParams: { [key: string]: string | string[] | undefined };
-}) {
+}>) {
     const session = await getServerSession(callbacks);
 
     if (!session) {

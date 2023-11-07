@@ -7,20 +7,20 @@ import { suapLogin } from '@/services/suap/login';
 import prisma from '@/lib/prisma';
 
 export async function POST(req: Request) {
-    const { username, password, session, doorId } = await req.json();
+    const { username, password, session, userId, studentId, suapId, fullyDelete } = await req.json();
 
     let user: Partial<{ admin: { type: Role } }> | undefined = undefined;
 
     if (typeof session !== 'string') {
-        if (!/^\d+$/.test(username)) {
+        if (!/^\d+$/.test(username) || !/^\d+$/.test(studentId)) {
             return NextResponse.json({ status: 'error', message: 'Matrícula inválida' }, { status: 400 });
         } else if (
             typeof username !== 'string' ||
             typeof password !== 'string' ||
-            typeof doorId !== 'string' ||
+            typeof studentId !== 'string' ||
             username.length <= 0 ||
             password.length <= 0 ||
-            doorId.length <= 0
+            studentId.length <= 0
         ) {
             return NextResponse.json({ status: 'error', message: 'Campos em falta' }, { status: 400 });
         }
@@ -62,26 +62,46 @@ export async function POST(req: Request) {
         );
     }
 
-    const door = await prisma.door.findUnique({
-        where: { id: doorId },
-    });
+    if (!fullyDelete) {
+        const studentD = await prisma.student.findFirst({
+            where: { OR: [{ id: studentId }, { suapId }] },
+        });
 
-    if (!door) {
-        return NextResponse.json({ status: 'error', message: 'Porta não encontrada' }, { status: 400 });
-    }
+        if (!studentD) {
+            return NextResponse.json({ status: 'error', message: 'Aluno não encontrado' }, { status: 400 });
+        }
 
-    const deletedDoor = await prisma.door
-        .delete({
-            where: { id: doorId },
-        })
-        .catch(() => undefined);
+        const deletedStudent = await prisma.student
+            .delete({
+                where: { id: studentD.id },
+            })
+            .catch(() => undefined);
 
-    if (!deletedDoor) {
-        return NextResponse.json({ status: 'error', message: 'Erro ao atualizar porta' }, { status: 400 });
+        if (!deletedStudent) {
+            return NextResponse.json({ status: 'error', message: 'Erro ao deletar aluno' }, { status: 400 });
+        }
+    } else {
+        const userD = await prisma.user.findFirst({
+            where: { OR: [{ id: userId }, { student: { OR: [{ suapId }, { id: studentId }] } }] },
+        });
+
+        if (!userD) {
+            return NextResponse.json({ status: 'error', message: 'Usuário não encontrado' }, { status: 400 });
+        }
+
+        const deletedUser = await prisma.user
+            .delete({
+                where: { id: userD.id },
+            })
+            .catch(() => undefined);
+
+        if (!deletedUser) {
+            return NextResponse.json({ status: 'error', message: 'Erro ao deletar usuário' }, { status: 400 });
+        }
     }
 
     return NextResponse.json({
         status: 'success',
-        message: `Porta deletada com sucesso!`,
+        message: fullyDelete ? 'Usuário deletado com sucesso' : 'Aluno deletado com sucesso',
     });
 }

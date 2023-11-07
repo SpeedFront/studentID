@@ -53,30 +53,31 @@ export async function POST(req: Request) {
 
         const { registration, name, email, phoneNumber, avatar, medicalInfo } = user;
 
-        const userDB = await prisma.user
-            .create({
-                data: {
-                    suapId: registration,
-                    rfid,
-                    name,
-                    email,
-                    phoneNumber,
-                    avatar,
+        const userDB = await prisma.student.create({
+            data: {
+                suapId: registration,
+                rfid,
+                medicalInfo: {
+                    create: medicalInfo,
                 },
-            })
-            .catch(() => undefined);
+                user: {
+                    connectOrCreate: {
+                        where: {
+                            email,
+                        },
+                        create: {
+                            name,
+                            email,
+                            avatar,
+                            phoneNumber,
+                        },
+                    },
+                },
+            },
+        });
 
         if (!userDB) {
             return NextResponse.json({ status: 'error', message: 'O usuário já existe!' }, { status: 400 });
-        }
-
-        if (medicalInfo) {
-            await prisma.medicalInfo.create({
-                data: {
-                    ...medicalInfo,
-                    userId: userDB.id,
-                },
-            });
         }
 
         await prisma.creationRequest.update({ data: { used: true }, where: { id } });

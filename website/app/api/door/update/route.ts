@@ -1,5 +1,6 @@
 // Endpoint que atualiza uma porta já cadastrada no banco de dados (precisa de autenticação de um usuário ADM)
-import type { User } from '@prisma/client';
+import type { Role } from '@prisma/client';
+import { replaceNullWithUndefined } from '@/utils/object';
 import { NextResponse } from 'next/server';
 import { getUserData } from '@/services/suap/user';
 import { suapLogin } from '@/services/suap/login';
@@ -8,7 +9,7 @@ import prisma from '@/lib/prisma';
 export async function POST(req: Request) {
     const { username, password, doorId, name, description, session } = await req.json();
 
-    let user: Partial<User> | undefined = undefined;
+    let user: Partial<{ admin: { type: Role } }> | undefined = undefined;
 
     if (typeof session !== 'string') {
         if (!/^\d+$/.test(username)) {
@@ -33,9 +34,12 @@ export async function POST(req: Request) {
         }
 
         user =
-            (await prisma.user.findUnique({
-                where: { id: username },
-            })) ?? undefined;
+            replaceNullWithUndefined(
+                await prisma.user.findFirst({
+                    where: { student: { suapId: username } },
+                    select: { admin: { select: { type: true } } },
+                }),
+            ) ?? undefined;
     } else {
         const userSuap = await getUserData({
             value: session,
@@ -43,14 +47,17 @@ export async function POST(req: Request) {
         });
 
         user =
-            (await prisma.user.findUnique({
-                where: { suapId: userSuap?.registration },
-            })) ?? undefined;
+            replaceNullWithUndefined(
+                await prisma.user.findFirst({
+                    where: { student: { suapId: userSuap?.registration } },
+                    select: { admin: { select: { type: true } } },
+                }),
+            ) ?? undefined;
     }
 
-    if (!user?.role) {
+    if (!user?.admin?.type) {
         return NextResponse.json({ status: 'error', message: 'Usuário não encontrado' }, { status: 400 });
-    } else if (!['ADMIN', 'SUPER_ADMIN'].includes(user.role)) {
+    } else if (!(['ADMIN', 'SUPER_ADMIN'] as Role[]).includes(user.admin.type)) {
         return NextResponse.json(
             { status: 'error', message: 'Você não tem permissão para fazer isso' },
             { status: 400 },

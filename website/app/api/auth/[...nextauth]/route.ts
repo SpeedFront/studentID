@@ -1,3 +1,4 @@
+import type { CustomUser } from '@/types/next-auth';
 import NextAuth, { type NextAuthOptions, type AuthOptions, type CallbacksOptions } from 'next-auth';
 import { suapLogin } from '@/services/suap/login';
 import CredentialsProvider from 'next-auth/providers/credentials';
@@ -6,11 +7,32 @@ import prisma from '@/lib/prisma';
 export const callbacks = {
     callbacks: {
         async session({ session, token, user }) {
-            const dbUser = await prisma.user.findFirst({
-                where: {
-                    email: token?.email ?? undefined,
-                },
-            });
+            const dbUser = await prisma.user
+                .findFirst({
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                        avatar: true,
+                        student: {
+                            select: {
+                                suapId: true,
+                            },
+                        },
+                    },
+                    where: {
+                        email: token?.email ?? undefined,
+                    },
+                })
+                .then(user => ({ ...user }))
+                .then(({ id, name, email, avatar, student }) => ({
+                    id: id!,
+                    name: name!,
+                    email: email ?? null,
+                    avatar: avatar ?? null,
+                    suapId: student?.suapId ?? '',
+                }))
+                .catch(() => undefined);
 
             session.user = dbUser ?? user;
 
@@ -47,7 +69,7 @@ export const authOptions: NextAuthOptions = {
                 registration: { label: 'Matrícula', type: 'text' },
                 password: { label: 'Senha', type: 'password' },
             },
-            async authorize(credentials) {
+            async authorize(credentials: Record<'registration' | 'password', string> | undefined) {
                 const { registration, password } = credentials ?? {};
 
                 if (!registration || !password) {
@@ -60,13 +82,36 @@ export const authOptions: NextAuthOptions = {
                     throw new Error(exists.message ?? 'Erro ao fazer login');
                 }
 
-                const user = await prisma.user.findUnique({
-                    where: {
-                        suapId: registration,
-                    },
-                });
+                const user: CustomUser | undefined = await prisma.user
+                    .findFirst({
+                        select: {
+                            id: true,
+                            name: true,
+                            email: true,
+                            avatar: true,
+                            student: {
+                                select: {
+                                    suapId: true,
+                                },
+                            },
+                        },
+                        where: {
+                            student: {
+                                suapId: registration,
+                            },
+                        },
+                    })
+                    .then(user => ({ ...user }))
+                    .then(({ id, name, email, avatar, student }) => ({
+                        id: id!,
+                        name: name!,
+                        email: email ?? null,
+                        avatar: avatar ?? null,
+                        suapId: student?.suapId ?? registration,
+                    }))
+                    .catch(() => undefined);
 
-                if (!user) {
+                if (!user?.id || !user.name || !user.suapId) {
                     throw new Error('Usuário não encontrado');
                 }
 

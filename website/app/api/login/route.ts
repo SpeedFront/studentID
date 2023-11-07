@@ -1,8 +1,6 @@
 //TODO: Adaptar para o novo sistema de login sem NextAuth para uso no React Native
 import { NextResponse } from 'next/server';
-import { getUserData } from '@/services/suap/user';
 import { suapLogin } from '@/services/suap/login';
-import prisma from '@/lib/prisma';
 
 export async function POST(req: Request) {
     const { username, password } = await req.json();
@@ -24,27 +22,5 @@ export async function POST(req: Request) {
         return NextResponse.json({ status: 'error', message: 'Credenciais inválidas' }, { status: 400 });
     }
 
-    const user = await getUserData({
-        value: sessionid?.value,
-        expires: Math.floor((Date.now() + 8 * 60 * 60 * 1000) / 1000),
-    });
-
-    if (!user) {
-        return NextResponse.json({ status: 'error', message: 'Erro ao obter dados do usuário' }, { status: 400 });
-    }
-
-    const userDB = await prisma.user.update({
-        data: {
-            name: user.name,
-            email: user.email,
-            suapId: user.registration,
-            phoneNumber: user.phoneNumber,
-            avatar: user.avatar,
-        },
-        where: {
-            suapId: user.registration,
-        },
-    });
-
-    return NextResponse.json({ status: 'success', data: userDB });
+    return NextResponse.json({ status: 'success', data: { session: sessionid.value } });
 }

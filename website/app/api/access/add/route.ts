@@ -9,7 +9,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ status: 'error', message: 'Campos em falta' }, { status: 400 });
     }
 
-    const user = await prisma.user.findUnique({
+    const student = await prisma.student.findUnique({
         where: { rfid },
     });
 
@@ -19,8 +19,8 @@ export async function POST(req: Request) {
 
     if (!door) {
         return NextResponse.json({ status: 'error', message: 'Porta não encontrada' }, { status: 401 });
-    } else if (!user) {
-        const request = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/user/add/request/`, {
+    } else if (!student) {
+        const request = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/student/add/request/`, {
             method: 'POST',
             body: JSON.stringify({ rfid, doorId }),
         });
@@ -47,7 +47,7 @@ export async function POST(req: Request) {
     try {
         await prisma.accessLog.create({
             data: {
-                userId: user.id,
+                studentId: student.id,
                 doorId: door.id,
             },
         });

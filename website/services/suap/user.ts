@@ -10,19 +10,30 @@ export interface UserData {
     registration: string;
     name: string;
     email: string;
-    avatar: string;
+    avatar?: string;
     phoneNumber?: string;
+    medicalInfo?: MedicalInfo;
 }
 
 export interface MedicalInfo {
-    bloodType: string;
-    allergies: string[];
+    bloodType?: string;
     diseases: string[];
+    deficiencies: string[];
     medications: string[];
+    useHearingAid: boolean;
+    useWheelchair: boolean;
 }
 
-export async function getUserData(sessionid: { value: string; expires: Date | number }, withMedicalInfo = false) {
-    const { page, browser } = await newPage('https://suap.ifpb.edu.br/', sessionid);
+export async function getUserData(
+    sessionid: { value: string; expires?: Date | number },
+    withMedicalInfo = false,
+): Promise<UserData | undefined> {
+    if (!sessionid.expires) {
+        sessionid.expires = Math.floor((Date.now() + 8 * 60 * 60 * 1000) / 1000);
+    }
+
+    const { value, expires } = sessionid;
+    const { page, browser } = await newPage('https://suap.ifpb.edu.br/', { value, expires });
 
     try {
         await page.waitForNetworkIdle();
@@ -100,7 +111,7 @@ export async function getUserData(sessionid: { value: string; expires: Date | nu
     }
 }
 
-async function getMedicalInfo(page: Page) {
+async function getMedicalInfo(page: Page): Promise<MedicalInfo> {
     const bloodTypeHandle = await page.$x('//*[@id="content"]/div[4]/div[1]/div/table/tbody/tr[2]/td[4]');
     const bloodType = await page.evaluate(el => el.textContent, bloodTypeHandle[0]);
 
@@ -155,10 +166,10 @@ async function getMedicalInfo(page: Page) {
         )) ?? false;
 
     return {
-        bloodType,
+        bloodType: bloodType ?? undefined,
         diseases,
         deficiencies,
-        medications: (medications?.length ?? 0) > 0 ? medications?.split(',') : [],
+        medications: (medications?.length ?? 0) > 0 ? medications?.split(',') ?? [] : [],
         useHearingAid,
         useWheelchair,
     };
