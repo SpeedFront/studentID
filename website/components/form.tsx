@@ -20,7 +20,7 @@ type FormProps = {
     type: 'login' | 'register';
 };
 
-export default function Form({ type }: FormProps) {
+export default function Form({ type }: Readonly<FormProps>) {
     const [loading, setLoading] = useState(false);
 
     const router = useRouter();
@@ -68,7 +68,7 @@ export default function Form({ type }: FormProps) {
             const { requestId, registration, password } = data;
 
             if (requestId) {
-                fetch('/api/user/add', {
+                fetch('/api/student/add', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

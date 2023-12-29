@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     description: 'Informações médicas do aluno',
 };
 
-export default async function MedicalInfo({ params: { suapId } }: { params: { suapId: string } }) {
+export default async function MedicalInfo({ params: { suapId } }: Readonly<{ params: { suapId: string } }>) {
     const medicalInfo = await prisma.medicalInfo.findFirst({
         select: {
             bloodType: true,
@@ -20,7 +20,7 @@ export default async function MedicalInfo({ params: { suapId } }: { params: { su
             useHearingAid: true,
         },
         where: {
-            user: {
+            student: {
                 suapId,
             },
         },

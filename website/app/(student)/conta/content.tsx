@@ -1,6 +1,6 @@
 'use client';
 
-import type { MedicalInfo, User } from '@prisma/client';
+import type { MedicalInfo } from '@prisma/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import SignOut from '@/components/sign-out';
@@ -8,7 +8,12 @@ import toast from 'react-hot-toast';
 import Image from 'next/image';
 
 interface UserAccountProps {
-    user: User;
+    user: {
+        name: string;
+        email: string | undefined;
+        phoneNumber: string | undefined;
+        avatar: string | undefined;
+    };
     session: string;
     medicalInfo: MedicalInfo;
 }

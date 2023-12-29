@@ -6,7 +6,7 @@ export function replaceValues(value: string, replacer?: Record<string, string>):
     let replacedValue = value;
 
     for (const key in replacer) {
-        if (Object.prototype.hasOwnProperty.call(replacer, key)) {
+        if (Object.hasOwn(replacer, key)) {
             const replaceKey = `[${key}]`;
             const replaceValue = replacer[key];
 

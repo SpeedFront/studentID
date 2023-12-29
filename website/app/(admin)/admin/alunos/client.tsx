@@ -13,9 +13,21 @@ type ApiResponse = {
     message?: string;
 };
 
-export function List({ users, session }: { users: User[]; session: string }) {
+type CustomUser = Omit<User, 'createdAt' | 'updatedAt'> & {
+    student: {
+        suapId: string;
+    } | null;
+};
+
+export function List({
+    users,
+    session,
+}: Readonly<{
+    users: CustomUser[];
+    session: string;
+}>) {
     const [loading, setLoading] = useState(false);
-    const [selectedUser, setSelectedUser] = useState<Omit<User, 'createdAt' | 'updatedAt'>>();
+    const [selectedUser, setSelectedUser] = useState<CustomUser>();
 
     const { refresh } = useRouter();
 
@@ -23,12 +35,12 @@ export function List({ users, session }: { users: User[]; session: string }) {
         setLoading(true);
 
         try {
-            const response = await fetch('/api/user/delete', {
+            const response = await fetch('/api/student/delete', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ userId: selectedUser?.id, session }),
+                body: JSON.stringify({ userId: selectedUser?.student?.suapId, session }),
             });
 
             const { status, message } = (await response.json()) as ApiResponse;
@@ -64,7 +76,7 @@ export function List({ users, session }: { users: User[]; session: string }) {
                         <div className="flex justify-around px-4 py-5 sm:px-6">
                             <div className="flex items-center justify-between w-[80%]">
                                 <h3 className="text-lg leading-6 font-medium">{user.name}</h3>
-                                <span className="text-gray-400">{user.suapId}</span>
+                                <span className="text-gray-400">{user.student?.suapId ?? user.email}</span>
                             </div>
                             <div className="flex justify-around w-[10%]">
                                 <button

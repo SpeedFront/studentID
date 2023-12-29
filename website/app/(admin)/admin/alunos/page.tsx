@@ -14,6 +14,12 @@ export const metadata: Metadata = {
 
 export default async function AlunosPage() {
     const users = await prisma.user.findMany({
+        include: {
+            student: { select: { suapId: true } },
+        },
+        where: {
+            NOT: [{ student: null }],
+        },
         orderBy: {
             name: 'asc',
         },
@@ -28,7 +34,7 @@ export default async function AlunosPage() {
     return (
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center">
-                <h1 className="text-3xl font-bold">Alunos registradas</h1>
+                <h1 className="text-3xl font-bold">Alunos registrados</h1>
             </div>
             <ul className="mt-8">
                 <List users={users} session={session.user.activeSessionId} />

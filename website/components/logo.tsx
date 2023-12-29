@@ -6,7 +6,7 @@ import Image from 'next/image';
 
 export type Props = Partial<ComponentProps<typeof Image> & { wide?: boolean; mode?: 'dark' | 'light' }>;
 
-function LogoUrl(p: Props) {
+function LogoUrl(p: Readonly<Props>) {
     const { isDarkMode } = useDarkMode();
     const { wide, mode, ...props } = p;
 

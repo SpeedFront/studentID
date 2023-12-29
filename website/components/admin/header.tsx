@@ -69,6 +69,7 @@ export const Drawer = async ({
                 </div>
             </div>
             <div className="drawer-content fixed top-2 left-2 flex flex-col items-center justify-center z-40 lg:hidden">
+                {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
                 <label htmlFor={drawerId} className="btn btn-primary btn-circle drawer-button">
                     <AiOutlineMenu size={22} />
                 </label>

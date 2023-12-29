@@ -80,15 +80,13 @@ const ListItem = ({
     NavLink: string;
 }) => {
     return (
-        <>
-            <li>
-                <Link
-                    href={NavLink}
-                    className={clsx('flex justify-center items-center py-2 text-base font-medium', className)}
-                >
-                    {children}
-                </Link>
-            </li>
-        </>
+        <li>
+            <Link
+                href={NavLink}
+                className={clsx('flex justify-center items-center py-2 text-base font-medium', className)}
+            >
+                {children}
+            </Link>
+        </li>
     );
 };

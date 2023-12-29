@@ -19,6 +19,7 @@ const SwitchThemeWrapper = () => {
         </button>
     );
 };
+
 const SwitchTheme = () => {
     const { isDarkMode, toggle } = useDarkMode();
 

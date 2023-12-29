@@ -14,7 +14,7 @@ type ApiResponse = {
     message?: string;
 };
 
-export function List({ doors, session }: { doors: Door[]; session: string }) {
+export function List({ doors, session }: Readonly<{ doors: Door[]; session: string }>) {
     const {
         register,
         handleSubmit,

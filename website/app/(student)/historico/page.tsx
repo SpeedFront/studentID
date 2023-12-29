@@ -31,9 +31,9 @@ export default async function HistoricoPage({
 
     const { user } = session;
 
-    const totalPages = Math.ceil((await prisma.accessLog.count({ where: { userId: user.id } })) / 10);
+    const totalPages = Math.ceil((await prisma.accessLog.count({ where: { studentId: user.suapId } })) / 10);
     const records = await prisma.accessLog.findMany({
-        where: { userId: user.id },
+        where: { studentId: user.suapId },
         orderBy: { createdAt: 'desc' },
         skip: page - 1 > 0 ? (page - 1) * 10 : 0,
         take: 10,

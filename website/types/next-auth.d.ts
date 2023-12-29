@@ -1,8 +1,9 @@
-import type { User as UserPrisma } from '@prisma/client';
+import type { Role, User as UserPrisma } from '@prisma/client';
 import type { DefaultJWT } from 'next-auth/jwt';
 
 export type CustomUser = Omit<UserPrisma, 'phoneNumber' | 'createdAt' | 'updatedAt'> & {
     suapId: string;
+    role?: Role;
     activeSessionId?: string;
 };
 

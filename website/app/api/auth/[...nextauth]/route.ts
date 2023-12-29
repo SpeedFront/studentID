@@ -19,18 +19,24 @@ export const callbacks = {
                                 suapId: true,
                             },
                         },
+                        admin: {
+                            select: {
+                                type: true,
+                            },
+                        },
                     },
                     where: {
                         email: token?.email ?? undefined,
                     },
                 })
                 .then(user => ({ ...user }))
-                .then(({ id, name, email, avatar, student }) => ({
+                .then(({ id, name, email, avatar, student, admin }) => ({
                     id: id!,
                     name: name!,
                     email: email ?? null,
                     avatar: avatar ?? null,
                     suapId: student?.suapId ?? '',
+                    role: admin?.type ?? undefined,
                 }))
                 .catch(() => undefined);
 
@@ -94,6 +100,11 @@ export const authOptions: NextAuthOptions = {
                                     suapId: true,
                                 },
                             },
+                            admin: {
+                                select: {
+                                    type: true,
+                                },
+                            },
                         },
                         where: {
                             student: {
@@ -102,12 +113,13 @@ export const authOptions: NextAuthOptions = {
                         },
                     })
                     .then(user => ({ ...user }))
-                    .then(({ id, name, email, avatar, student }) => ({
+                    .then(({ id, name, email, avatar, student, admin }) => ({
                         id: id!,
                         name: name!,
                         email: email ?? null,
                         avatar: avatar ?? null,
                         suapId: student?.suapId ?? registration,
+                        role: admin?.type ?? undefined,
                     }))
                     .catch(() => undefined);
 

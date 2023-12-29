@@ -6,6 +6,7 @@ import { Logo } from '@/components/logo';
 import UserAccount from './content';
 import prisma from '@/lib/prisma';
 import Link from 'next/link';
+import { replaceNullWithUndefined } from '@/utils/object';
 
 export const metadata: Metadata = {
     title: 'StudentID - Minha conta',
@@ -21,8 +22,8 @@ export default async function Account() {
 
     const { user } = session;
 
-    const medicalInfo = await prisma.medicalInfo.findUnique({
-        where: { userId: session.user.id },
+    const medicalInfo = await prisma.medicalInfo.findFirst({
+        where: { student: { suapId: user.suapId } },
     });
 
     if (!user.activeSessionId) {
@@ -46,5 +47,45 @@ export default async function Account() {
         );
     }
 
-    return <UserAccount user={user} session={user.activeSessionId} medicalInfo={medicalInfo} />;
+    const userAccount = await prisma.user
+        .findFirst({
+            where: {
+                student: {
+                    suapId: user.suapId,
+                },
+            },
+            select: {
+                name: true,
+                email: true,
+                phoneNumber: true,
+                avatar: true,
+            },
+        })
+        .then(user => {
+            console.log(user);
+            return user;
+        })
+        .then(user => replaceNullWithUndefined(user));
+
+    console.log(userAccount);
+    if (!userAccount) {
+        return (
+            <div className="flex h-[80vh] w-full items-center justify-center">
+                <div className="z-10 w-full max-w-md overflow-hidden rounded-2xl border shadow-xl">
+                    <div className="flex flex-col items-center justify-center space-y-3 border-b px-4 py-6 pt-8 text-center sm:px-16">
+                        <Link href="/">
+                            <Logo priority className="h-64 w-64" width={256} height={256} />
+                        </Link>
+                        <h3 className="text-xl font-semibold">Usuário não encontrado</h3>
+                        <p className="text-sm text-gray-400">O usuário não foi encontrado.</p>
+                        <Link href="/login" className="btn btn-primary normal-case">
+                            Voltar para o login
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    return <UserAccount user={userAccount} session={user.activeSessionId} medicalInfo={medicalInfo} />;
 }

@@ -1,4 +1,4 @@
-import { PuppeteerLaunchOptions } from 'puppeteer';
+import type { PuppeteerLaunchOptions } from 'puppeteer';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import puppeteer from 'puppeteer-extra';
 
@@ -24,29 +24,9 @@ export async function newPage(
         executablePath: puppeteer.executablePath(),
     };
 
-    let options: PuppeteerLaunchOptions = localOptions;
+    const options = localOptions;
 
-    if (process.env.USE_SERVER_CHROMIUM === 'true') {
-        const chromium = (await import('@sparticuz/chromium-min')).default;
-        options = {
-            args: [...chromium.args, '--hide-scrollbars', '--disable-web-security'],
-            defaultViewport: chromium.defaultViewport,
-            headless: chromium.headless,
-            ignoreHTTPSErrors: true,
-            ...args,
-            executablePath: await chromium.executablePath(
-                `https://github.com/Sparticuz/chromium/releases/download/v116.0.0/chromium-v116.0.0-pack.tar`,
-            ),
-        };
-    }
-
-    const browser =
-        process.env.BLESS_TOKEN && process.env.USE_BLESS === 'true'
-            ? await puppeteer.connect({
-                  browserWSEndpoint: `wss://chrome.browserless.io?token=${process.env.BLESS_TOKEN}`,
-                  ignoreHTTPSErrors: true,
-              })
-            : await puppeteer.launch(options);
+    const browser = await puppeteer.launch(options);
 
     const page = await browser.newPage();
 
